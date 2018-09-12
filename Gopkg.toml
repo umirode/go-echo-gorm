@@ -40,3 +40,7 @@
 [[constraint]]
   name = "github.com/sirupsen/logrus"
   version = "1.0.6"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/iancoleman/strcase"
