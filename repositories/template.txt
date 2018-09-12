@@ -1,0 +1,57 @@
+package repositories
+
+import (
+    "github.com/umirode/go-rest/models"
+    "github.com/umirode/go-rest/database"
+)
+
+type {{ .Name | ToCamel }}Repository struct {
+}
+
+func New{{ .Name | ToCamel }}Repository() *{{ .Name | ToCamel }}Repository {
+    return &{{ .Name | ToCamel }}Repository{}
+}
+
+func (r *{{ .Name | ToCamel }}Repository) GetAll{{ .Name | ToCamel }}s() []models.{{ .Name | ToCamel }}Model {
+    var {{ .Name | ToLowerCamel }}s []models.{{ .Name | ToCamel }}Model
+    database.GetDBConnection().Find(&{{ .Name | ToLowerCamel }}s)
+
+    return {{ .Name | ToLowerCamel }}s
+}
+
+func (r *{{ .Name | ToCamel }}Repository) GetSingle{{ .Name | ToCamel }}(id uint) models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel }} := models.{{ .Name | ToCamel }}Model{
+        ID: id,
+    }
+    database.GetDBConnection().First(&{{ .Name | ToLowerCamel }})
+
+    return {{ .Name | ToLowerCamel }}
+}
+
+func (r *{{ .Name | ToCamel }}Repository) Create{{ .Name | ToCamel }}(field string) models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel }} := models.{{ .Name | ToCamel }}Model{
+        Field: field,
+    }
+    database.GetDBConnection().Create(&{{ .Name | ToLowerCamel }})
+
+    return {{ .Name | ToLowerCamel }}
+}
+
+func (r *{{ .Name | ToCamel }}Repository) Update{{ .Name | ToCamel }}(id uint, field string) models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel }} := models.{{ .Name | ToCamel }}Model{
+        ID: id,
+    }
+    database.GetDBConnection().First(&{{ .Name | ToLowerCamel }})
+
+    {{ .Name | ToLowerCamel }}.Field = field
+    database.GetDBConnection().Save(&{{ .Name | ToLowerCamel }})
+
+    return {{ .Name | ToLowerCamel }}
+}
+
+func (r *{{ .Name | ToCamel }}Repository) Delete{{ .Name | ToCamel }}(id uint) {
+    {{ .Name | ToLowerCamel }} := models.{{ .Name | ToCamel }}Model{
+        ID: id,
+    }
+    database.GetDBConnection().Delete(&{{ .Name | ToLowerCamel }})
+}
