@@ -1,0 +1,14 @@
+package services
+
+import (
+    "github.com/umirode/go-rest/models"
+)
+
+type I{{ .Name | ToCamel }}Service interface {
+    Get{{ .Name | ToCamel }}sByID(id uint) []models.{{ .Name | ToCamel }}Model
+    GetAll{{ .Name | ToCamel }}s() []models.{{ .Name | ToCamel }}Model
+
+    Create{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error
+    Update{{ .Name | ToCamel }}(id uint, {{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error
+    Delete{{ .Name | ToCamel }}(id uint) error
+}

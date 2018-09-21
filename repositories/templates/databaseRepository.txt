@@ -1,0 +1,56 @@
+package repositories
+
+import (
+    "github.com/umirode/go-rest/models"
+    "github.com/umirode/go-rest/specifications"
+    "github.com/jinzhu/gorm"
+)
+
+type {{ .Name | ToCamel }}DatabaseRepository struct {
+    BaseDatabaseRepository
+
+    I{{ .Name | ToCamel }}Repository
+}
+
+func New{{ .Name | ToCamel }}DatabaseRepository(database *gorm.DB) *{{ .Name | ToCamel }}DatabaseRepository {
+    repository := &{{ .Name | ToCamel }}DatabaseRepository{}
+
+    repository.Database = database
+
+    return repository
+}
+
+func (r *{{ .Name | ToCamel }}DatabaseRepository) Query(specifications ...specifications.IDatabaseSpecification) []models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel }}s := make([]models.{{ .Name | ToCamel }}Model, 0)
+
+    r.getQueryBySpecification(specifications...).Find(&{{ .Name | ToLowerCamel }}s)
+
+    return {{ .Name | ToLowerCamel }}s
+}
+
+func (r *{{ .Name | ToCamel }}DatabaseRepository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    err := r.create({{ .Name | ToLowerCamel }})
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func (r *{{ .Name | ToCamel }}DatabaseRepository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    err := r.update({{ .Name | ToLowerCamel }}, "FIELD")
+    if err != nil {
+        return err
+    }
+
+    return nil
+}
+
+func (r *{{ .Name | ToCamel }}DatabaseRepository) Delete{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    err := r.delete({{ .Name | ToLowerCamel }})
+    if err != nil {
+        return err
+    }
+
+    return nil
+}

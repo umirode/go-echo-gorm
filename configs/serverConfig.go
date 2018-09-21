@@ -1,24 +1,24 @@
 package configs
 
 import (
-    "sync"
+	"sync"
 )
 
 type ServerConfig struct {
-    Host string
-    Port uint
+	Host string
+	Port uint
 }
 
 var serverConfigOnce sync.Once
 var serverConfig *ServerConfig
 
 func GetServerConfig() *ServerConfig {
-    serverConfigOnce.Do(func() {
-        serverConfig = &ServerConfig{
-            Host: "127.0.0.1",
-            Port: 88,
-        }
-    })
+	serverConfigOnce.Do(func() {
+		serverConfig = &ServerConfig{
+			Host: "127.0.0.1",
+			Port: 89,
+		}
+	})
 
-    return serverConfig
+	return serverConfig
 }

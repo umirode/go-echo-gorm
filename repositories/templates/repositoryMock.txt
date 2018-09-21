@@ -1,0 +1,37 @@
+package repositories
+
+import (
+    "github.com/umirode/go-rest/models"
+    "github.com/stretchr/testify/mock"
+    "github.com/umirode/go-rest/specifications"
+)
+
+type Mock{{ .Name | ToCamel }}Repository struct {
+    mock.Mock
+
+    I{{ .Name | ToCamel }}Repository
+}
+
+func (r *Mock{{ .Name | ToCamel }}Repository) Query(specifications ...specifications.IDatabaseSpecification) []models.{{ .Name | ToCamel }}Model {
+    args := r.Called()
+
+    return args.Get(0).([]models.{{ .Name | ToCamel }}Model)
+}
+
+func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    args := r.Called({{ .Name | ToLowerCamel }})
+
+    return args.Error(0)
+}
+
+func (r *Mock{{ .Name | ToCamel }}Repository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    args := r.Called({{ .Name | ToLowerCamel }})
+
+    return args.Error(1)
+}
+
+func (r *Mock{{ .Name | ToCamel }}Repository) Delete{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    args := r.Called({{ .Name | ToLowerCamel }})
+
+    return args.Error(0)
+}

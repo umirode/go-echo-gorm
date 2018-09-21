@@ -1,0 +1,42 @@
+package services
+
+import (
+    "github.com/umirode/go-rest/models"
+    "github.com/stretchr/testify/mock"
+)
+
+type {{ .Name | ToCamel }}ServiceMock struct {
+    mock.Mock
+
+    I{{ .Name | ToCamel }}Service
+}
+
+func (s *{{ .Name | ToCamel }}ServiceMock) Get{{ .Name | ToCamel }}ByID(id uint) []models.{{ .Name | ToCamel }}Model {
+    args := s.Called(id)
+
+    return args.Get(0).([]models.{{ .Name | ToCamel }}Model)
+}
+
+func (s *{{ .Name | ToCamel }}ServiceMock) GetAll{{ .Name | ToCamel }}s() []models.{{ .Name | ToCamel }}Model {
+    args := s.Called()
+
+    return args.Get(0).([]models.{{ .Name | ToCamel }}Model)
+}
+
+func (s *{{ .Name | ToCamel }}ServiceMock) Create{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    args := s.Called({{ .Name | ToLowerCamel }})
+
+    return args.Error(0)
+}
+
+func (s *{{ .Name | ToCamel }}ServiceMock) Update{{ .Name | ToCamel }}(id uint, {{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
+    args := s.Called(id, {{ .Name | ToLowerCamel }})
+
+    return args.Error(0)
+}
+
+func (s *{{ .Name | ToCamel }}ServiceMock) Delete{{ .Name | ToCamel }}(id uint) error {
+    args := s.Called(id)
+
+    return args.Error(0)
+}

@@ -1,0 +1,7 @@
+package models
+
+type {{ .Name | ToCamel }}Model struct {
+    BaseModel
+
+    Field string `gorm:"size:255" json:"field"`
+}
