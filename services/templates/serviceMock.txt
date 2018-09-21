@@ -11,16 +11,16 @@ type {{ .Name | ToCamel }}ServiceMock struct {
     I{{ .Name | ToCamel }}Service
 }
 
-func (s *{{ .Name | ToCamel }}ServiceMock) Get{{ .Name | ToCamel }}ByID(id uint) []models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}ServiceMock) Get{{ .Name | ToCamel | Plural }}ByID(id uint) *[]models.{{ .Name | ToCamel }}Model {
     args := s.Called(id)
 
-    return args.Get(0).([]models.{{ .Name | ToCamel }}Model)
+    return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
 }
 
-func (s *{{ .Name | ToCamel }}ServiceMock) GetAll{{ .Name | ToCamel }}s() []models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}ServiceMock) GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model {
     args := s.Called()
 
-    return args.Get(0).([]models.{{ .Name | ToCamel }}Model)
+    return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
 }
 
 func (s *{{ .Name | ToCamel }}ServiceMock) Create{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {

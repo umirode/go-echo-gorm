@@ -20,12 +20,12 @@ func New{{ .Name | ToCamel }}DatabaseRepository(database *gorm.DB) *{{ .Name | T
     return repository
 }
 
-func (r *{{ .Name | ToCamel }}DatabaseRepository) Query(specifications ...specifications.IDatabaseSpecification) []models.{{ .Name | ToCamel }}Model {
-    {{ .Name | ToLowerCamel }}s := make([]models.{{ .Name | ToCamel }}Model, 0)
+func (r *{{ .Name | ToCamel }}DatabaseRepository) Query(specifications ...specifications.IDatabaseSpecification) *[]models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel | Plural}} := make([]models.{{ .Name | ToCamel }}Model, 0)
 
-    r.getQueryBySpecification(specifications...).Find(&{{ .Name | ToLowerCamel }}s)
+    r.getQueryBySpecification(specifications...).Find(&{{ .Name | ToLowerCamel | Plural}})
 
-    return {{ .Name | ToLowerCamel }}s
+    return &{{ .Name | ToLowerCamel | Plural}}
 }
 
 func (r *{{ .Name | ToCamel }}DatabaseRepository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {

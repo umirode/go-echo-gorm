@@ -14,20 +14,20 @@ type {{ .Name | ToCamel }}Service struct {
     Repository repositories.I{{ .Name | ToCamel }}Repository
 }
 
-func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}sByID(id uint) []models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel | Plural }}ByID(id uint) *[]models.{{ .Name | ToCamel }}Model {
     idSpecification := &specifications.IdSpecification{
         Id: id,
     }
 
-    {{ .Name | ToLowerCamel }}s := s.Repository.Query(idSpecification)
+    {{ .Name | ToLowerCamel | Plural }} := s.Repository.Query(idSpecification)
 
-    return {{ .Name | ToLowerCamel }}s
+    return {{ .Name | ToLowerCamel | Plural }}
 }
 
-func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel }}s() []models.{{ .Name | ToCamel }}Model {
-    {{ .Name | ToLowerCamel }}s := s.Repository.Query()
+func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel | Plural}} := s.Repository.Query()
 
-    return {{ .Name | ToLowerCamel }}s
+    return {{ .Name | ToLowerCamel | Plural}}
 }
 
 func (s *{{ .Name | ToCamel }}Service) Create{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {

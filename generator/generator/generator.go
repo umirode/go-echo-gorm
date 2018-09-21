@@ -2,6 +2,7 @@ package generator
 
 import (
 	"github.com/iancoleman/strcase"
+	"github.com/jinzhu/inflection"
 	"io"
 	"io/ioutil"
 	"os"
@@ -44,6 +45,8 @@ func (tg *TemplateGenerator) Generate(file io.Writer, templateBytes []byte, temp
 	fileTemplate := template.Must(template.New("").Funcs(template.FuncMap{
 		"ToCamel":      strcase.ToCamel,
 		"ToLowerCamel": strcase.ToLowerCamel,
+		"Plural":       inflection.Plural,
+		"Singular":     inflection.Singular,
 	}).Parse(string(templateBytes)))
 
 	return fileTemplate.Execute(file, templateData)

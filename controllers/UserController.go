@@ -14,7 +14,7 @@ type UserController struct {
 }
 
 func (c *UserController) GetAllUsers(context echo.Context) error {
-	users := c.UserService.GetAllUsers()
+	users := *c.UserService.GetAllUsers()
 
 	return response.SendResponseJson(context, "success", "", users)
 }
@@ -25,7 +25,7 @@ func (c *UserController) GetSingleUser(context echo.Context) error {
 		return c.getQueryParsingError()
 	}
 
-	users := c.UserService.GetUsersByID(id)
+	users := *c.UserService.GetUsersByID(id)
 	if len(users) < 1 {
 		return c.getNotExistsError()
 	}

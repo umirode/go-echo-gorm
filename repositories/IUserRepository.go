@@ -10,5 +10,5 @@ type IUserRepository interface {
 	UpdateUser(user *models.UserModel) error
 	DeleteUser(user *models.UserModel) error
 
-	Query(specifications ...specifications.IDatabaseSpecification) []models.UserModel
+	Query(specifications ...specifications.IDatabaseSpecification) *[]models.UserModel
 }

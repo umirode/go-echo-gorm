@@ -14,7 +14,7 @@ type UserService struct {
 	Repository repositories.IUserRepository
 }
 
-func (s *UserService) GetUsersByID(id uint) []models.UserModel {
+func (s *UserService) GetUsersByID(id uint) *[]models.UserModel {
 	idSpecification := &specifications.IdSpecification{
 		Id: id,
 	}
@@ -24,7 +24,7 @@ func (s *UserService) GetUsersByID(id uint) []models.UserModel {
 	return users
 }
 
-func (s *UserService) GetUsersByName(name string) []models.UserModel {
+func (s *UserService) GetUsersByName(name string) *[]models.UserModel {
 	userNameSpecification := &specifications.UserNameSpecification{
 		Name: name,
 	}
@@ -34,7 +34,7 @@ func (s *UserService) GetUsersByName(name string) []models.UserModel {
 	return users
 }
 
-func (s *UserService) GetAllUsers() []models.UserModel {
+func (s *UserService) GetAllUsers() *[]models.UserModel {
 	users := s.Repository.Query()
 
 	return users

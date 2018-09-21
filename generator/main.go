@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/jinzhu/inflection"
 	"github.com/pkg/errors"
 	"github.com/umirode/go-rest/generator/generator"
 	"github.com/umirode/go-rest/generator/objects"
@@ -29,8 +30,8 @@ func main() {
 	}
 
 	app.Action = func(c *cli.Context) error {
-		object := c.String("type")
-		name := c.String("name")
+		object := inflection.Singular(c.String("type"))
+		name := inflection.Singular(c.String("name"))
 		params := c.StringSlice("param")
 
 		if name == "" {
