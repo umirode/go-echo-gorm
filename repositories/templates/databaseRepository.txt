@@ -28,6 +28,14 @@ func (r *{{ .Name | ToCamel }}DatabaseRepository) Query(specifications ...specif
     return &{{ .Name | ToLowerCamel | Plural}}
 }
 
+func (r *{{ .Name | ToCamel }}DatabaseRepository) RawQuery(handler func(db *gorm.DB, {{ .Name | ToLowerCamel | Plural}} *[]models.{{ .Name | ToCamel }}Model)) *[]models.{{ .Name | ToCamel }}Model {
+    {{ .Name | ToLowerCamel | Plural}} := make([]models.{{ .Name | ToCamel }}Model, 0)
+
+    handler(r.Database, &{{ .Name | ToLowerCamel | Plural}})
+
+    return &{{ .Name | ToLowerCamel | Plural}}
+}
+
 func (r *{{ .Name | ToCamel }}DatabaseRepository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
     err := r.create({{ .Name | ToLowerCamel }})
     if err != nil {

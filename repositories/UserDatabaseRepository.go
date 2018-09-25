@@ -28,6 +28,14 @@ func (r *UserDatabaseRepository) Query(specifications ...specifications.IDatabas
     return &users
 }
 
+func (r *UserDatabaseRepository) RawQuery(handler func(db *gorm.DB, users *[]models.UserModel)) *[]models.UserModel {
+    users := make([]models.UserModel, 0)
+
+    handler(r.Database, &users)
+
+    return &users
+}
+
 func (r *UserDatabaseRepository) AddUser(user *models.UserModel) error {
     err := r.create(user)
     if err != nil {
@@ -38,7 +46,7 @@ func (r *UserDatabaseRepository) AddUser(user *models.UserModel) error {
 }
 
 func (r *UserDatabaseRepository) UpdateUser(user *models.UserModel) error {
-    err := r.update(user, "name")
+    err := r.update(user, "FIELD")
     if err != nil {
         return err
     }

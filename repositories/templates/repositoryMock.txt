@@ -18,6 +18,12 @@ func (r *Mock{{ .Name | ToCamel }}Repository) Query(specifications ...specificat
     return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
 }
 
+func (r *Mock{{ .Name | ToCamel }}Repository) RawQuery(handler func(db *gorm.DB, {{ .Name | ToLowerCamel | Plural}} *[]models.{{ .Name | ToCamel }}Model)) *[]models.{{ .Name | ToCamel }}Model {
+    args := r.Called(handler)
+
+    return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
+}
+
 func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
     args := r.Called({{ .Name | ToLowerCamel }})
 

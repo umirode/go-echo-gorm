@@ -4,6 +4,7 @@ import (
     "github.com/umirode/go-rest/models"
     "github.com/stretchr/testify/mock"
     "github.com/umirode/go-rest/specifications"
+    "github.com/jinzhu/gorm"
 )
 
 type MockUserRepository struct {
@@ -12,10 +13,16 @@ type MockUserRepository struct {
     IUserRepository
 }
 
-func (r *MockUserRepository) Query(specifications ...specifications.IDatabaseSpecification) []models.UserModel {
+func (r *MockUserRepository) Query(specifications ...specifications.IDatabaseSpecification) *[]models.UserModel {
     args := r.Called()
 
-    return args.Get(0).([]models.UserModel)
+    return args.Get(0).(*[]models.UserModel)
+}
+
+func (r *MockUserRepository) RawQuery(handler func(db *gorm.DB, users *[]models.UserModel)) *[]models.UserModel {
+    args := r.Called(handler)
+
+    return args.Get(0).(*[]models.UserModel)
 }
 
 func (r *MockUserRepository) AddUser(user *models.UserModel) error {
