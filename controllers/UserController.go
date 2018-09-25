@@ -5,7 +5,7 @@ import (
     "github.com/umirode/go-rest/models"
     "github.com/umirode/go-rest/response"
     "github.com/umirode/go-rest/services"
-    )
+)
 
 type UserController struct {
     BaseController
@@ -26,8 +26,8 @@ func (c *UserController) GetSingleUser(context echo.Context) error {
     }
 
     user := c.UserService.GetUserByID(id)
-    if user == nil{
-       return c.getNotExistsError()
+    if user == nil {
+        return c.getNotExistsError()
     }
 
     return response.SendResponseJson(context, "success", "", user)

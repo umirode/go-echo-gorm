@@ -1,15 +1,15 @@
 package specifications
 
 import (
-	"github.com/jinzhu/gorm"
+    "github.com/jinzhu/gorm"
 )
 
 type UserNameSpecification struct {
-	IDatabaseSpecification
+    IDatabaseSpecification
 
-	Name string
+    Name string
 }
 
 func (s *UserNameSpecification) GetForDatabase(db *gorm.DB) *gorm.DB {
-	return db.Where("name = ?", s.Name)
+    return db.Where("name = ?", s.Name)
 }

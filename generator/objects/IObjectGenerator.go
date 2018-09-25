@@ -1,5 +1,5 @@
 package objects
 
 type IObjectGenerator interface {
-	Generate(name string, args []string) error
+    Generate(name string, args []string) error
 }
