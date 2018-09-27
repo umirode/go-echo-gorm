@@ -3,20 +3,10 @@ package repositories
 import (
     "errors"
     "github.com/jinzhu/gorm"
-    "github.com/umirode/go-rest/specifications"
 )
 
 type BaseDatabaseRepository struct {
     Database *gorm.DB
-}
-
-func (r *BaseDatabaseRepository) getQueryBySpecification(specifications ...specifications.IDatabaseSpecification) *gorm.DB {
-    query := r.Database
-    for _, specification := range specifications {
-        query = specification.GetForDatabase(query)
-    }
-
-    return query
 }
 
 func (r *BaseDatabaseRepository) create(i interface{}) error {

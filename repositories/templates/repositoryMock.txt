@@ -3,7 +3,6 @@ package repositories
 import (
     "github.com/umirode/go-rest/models"
     "github.com/stretchr/testify/mock"
-    "github.com/umirode/go-rest/specifications"
 )
 
 type Mock{{ .Name | ToCamel }}Repository struct {
@@ -12,16 +11,16 @@ type Mock{{ .Name | ToCamel }}Repository struct {
     I{{ .Name | ToCamel }}Repository
 }
 
-func (r *Mock{{ .Name | ToCamel }}Repository) Query(specifications ...specifications.IDatabaseSpecification) *[]models.{{ .Name | ToCamel }}Model {
+func (r *Mock{{ .Name | ToCamel }}Repository) FindAll() *[]models.{{ .Name | ToCamel }}Model {
     args := r.Called()
 
     return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
 }
 
-func (r *Mock{{ .Name | ToCamel }}Repository) RawQuery(handler func(db *gorm.DB, {{ .Name | ToLowerCamel | Plural}} *[]models.{{ .Name | ToCamel }}Model)) *[]models.{{ .Name | ToCamel }}Model {
-    args := r.Called(handler)
+func (r *Mock{{ .Name | ToCamel }}Repository) FindSingleById(id uint) *models.{{ .Name | ToCamel }}Model {
+    args := r.Called(id)
 
-    return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
+    return args.Get(0).(*models.{{ .Name | ToCamel }}Model)
 }
 
 func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
@@ -33,7 +32,7 @@ func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name 
 func (r *Mock{{ .Name | ToCamel }}Repository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
     args := r.Called({{ .Name | ToLowerCamel }})
 
-    return args.Error(1)
+    return args.Error(0)
 }
 
 func (r *Mock{{ .Name | ToCamel }}Repository) Delete{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {

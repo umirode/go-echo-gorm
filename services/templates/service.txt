@@ -3,7 +3,6 @@ package services
 import (
     "github.com/umirode/go-rest/repositories"
     "github.com/umirode/go-rest/models"
-    "github.com/umirode/go-rest/specifications"
 )
 
 type {{ .Name | ToCamel }}Service struct {
@@ -15,20 +14,13 @@ type {{ .Name | ToCamel }}Service struct {
 }
 
 func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) *models.{{ .Name | ToCamel }}Model {
-    idSpecification := &specifications.IdSpecification{
-        Id: id,
-    }
+    {{ .Name | ToLowerCamel | Plural }} := s.Repository.FindSingleById(id)
 
-    {{ .Name | ToLowerCamel | Plural }} := s.Repository.Query(idSpecification)
-    if len(*{{ .Name | ToLowerCamel | Plural }}) < 1 {
-        return nil
-    }
-
-    return &(*{{ .Name | ToLowerCamel | Plural }})[0]
+    return {{ .Name | ToLowerCamel | Plural }}
 }
 
 func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model {
-    {{ .Name | ToLowerCamel | Plural}} := s.Repository.Query()
+    {{ .Name | ToLowerCamel | Plural}} := s.Repository.FindAll()
 
     return {{ .Name | ToLowerCamel | Plural}}
 }

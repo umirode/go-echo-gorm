@@ -2,7 +2,6 @@ package repositories
 
 import (
     "github.com/umirode/go-rest/models"
-    "github.com/umirode/go-rest/specifications"
     "github.com/jinzhu/gorm"
 )
 
@@ -20,20 +19,20 @@ func NewUserDatabaseRepository(database *gorm.DB) *UserDatabaseRepository {
     return repository
 }
 
-func (r *UserDatabaseRepository) Query(specifications ...specifications.IDatabaseSpecification) *[]models.UserModel {
+func (r *UserDatabaseRepository) FindAll() *[]models.UserModel {
     users := make([]models.UserModel, 0)
 
-    r.getQueryBySpecification(specifications...).Find(&users)
+    r.Database.Find(&users)
 
     return &users
 }
 
-func (r *UserDatabaseRepository) RawQuery(handler func(db *gorm.DB, users *[]models.UserModel)) *[]models.UserModel {
-    users := make([]models.UserModel, 0)
+func (r *UserDatabaseRepository) FindSingleById(id uint) *models.UserModel {
+    user := new(models.UserModel)
 
-    handler(r.Database, &users)
+    r.Database.Where("id = ?", id).First(&user)
 
-    return &users
+    return user
 }
 
 func (r *UserDatabaseRepository) AddUser(user *models.UserModel) error {

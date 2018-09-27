@@ -3,7 +3,6 @@ package services
 import (
     "github.com/umirode/go-rest/repositories"
     "github.com/umirode/go-rest/models"
-    "github.com/umirode/go-rest/specifications"
 )
 
 type UserService struct {
@@ -15,20 +14,13 @@ type UserService struct {
 }
 
 func (s *UserService) GetUserByID(id uint) *models.UserModel {
-    idSpecification := &specifications.IdSpecification{
-        Id: id,
-    }
+    users := s.Repository.FindSingleById(id)
 
-    users := s.Repository.Query(idSpecification)
-    if len(*users) < 1 {
-        return nil
-    }
-
-    return &(*users)[0]
+    return users
 }
 
 func (s *UserService) GetAllUsers() *[]models.UserModel {
-    users := s.Repository.Query()
+    users := s.Repository.FindAll()
 
     return users
 }

@@ -2,8 +2,6 @@ package repositories
 
 import (
     "github.com/umirode/go-rest/models"
-    "github.com/umirode/go-rest/specifications"
-    "github.com/jinzhu/gorm"
 )
 
 type I{{ .Name | ToCamel }}Repository interface {
@@ -11,6 +9,6 @@ type I{{ .Name | ToCamel }}Repository interface {
     Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error
     Delete{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error
 
-    Query(specifications ...specifications.IDatabaseSpecification) *[]models.{{ .Name | ToCamel }}Model
-    RawQuery(handler func(db *gorm.DB, {{ .Name | ToLowerCamel | Plural}} *[]models.{{ .Name | ToCamel }}Model)) *[]models.{{ .Name | ToCamel }}Model
+    FindAll() *[]models.{{ .Name | ToCamel }}Model
+    FindSingleById(id uint) *models.{{ .Name | ToCamel }}Model
 }
