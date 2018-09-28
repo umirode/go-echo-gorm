@@ -1,0 +1,10 @@
+package configs
+
+import (
+    "github.com/stretchr/testify/assert"
+    "testing"
+)
+
+func TestGet{{ .Name | ToLowerCamel }}Config(t *testing.T) {
+    assert.NotEmpty(t, Get{{ .Name | ToLowerCamel }}Config())
+}
