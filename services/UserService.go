@@ -1,49 +1,53 @@
 package services
 
 import (
-    "github.com/umirode/go-rest/repositories"
-    "github.com/umirode/go-rest/models"
+	"github.com/umirode/go-rest/models"
+	"github.com/umirode/go-rest/repositories"
 )
 
 type UserService struct {
-    IUserService
+	IUserService
 
-    BaseService
+	BaseService
 
-    Repository repositories.IUserRepository
+	Repository repositories.IUserRepository
 }
 
 func (s *UserService) GetUserByID(id uint) *models.UserModel {
-    users := s.Repository.FindSingleById(id)
+	user := s.Repository.FindSingleById(id)
 
-    return users
+	if user.ID == 0 {
+		return nil
+	}
+
+	return user
 }
 
 func (s *UserService) GetAllUsers() *[]models.UserModel {
-    users := s.Repository.FindAll()
+	users := s.Repository.FindAll()
 
-    return users
+	return users
 }
 
 func (s *UserService) CreateUser(user *models.UserModel) error {
-    err := s.Repository.AddUser(user)
+	err := s.Repository.AddUser(user)
 
-    return err
+	return err
 }
 
 func (s *UserService) UpdateUser(id uint, user *models.UserModel) error {
-    user.ID = id
+	user.ID = id
 
-    err := s.Repository.UpdateUser(user)
+	err := s.Repository.UpdateUser(user)
 
-    return err
+	return err
 }
 
 func (s *UserService) DeleteUser(id uint) error {
-    user := new(models.UserModel)
-    user.ID = id
+	user := new(models.UserModel)
+	user.ID = id
 
-    err := s.Repository.DeleteUser(user)
+	err := s.Repository.DeleteUser(user)
 
-    return err
+	return err
 }

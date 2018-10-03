@@ -14,9 +14,13 @@ type {{ .Name | ToCamel }}Service struct {
 }
 
 func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) *models.{{ .Name | ToCamel }}Model {
-    {{ .Name | ToLowerCamel | Plural }} := s.Repository.FindSingleById(id)
+    {{ .Name | ToLowerCamel }} := s.Repository.FindSingleById(id)
 
-    return {{ .Name | ToLowerCamel | Plural }}
+    if {{ .Name | ToLowerCamel }}.ID == 0 {
+        return nil
+    }
+
+    return {{ .Name | ToLowerCamel }}
 }
 
 func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model {

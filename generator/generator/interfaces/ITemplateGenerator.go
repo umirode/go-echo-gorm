@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-    "io"
+	"io"
 )
 
 type ITemplateGenerator interface {
-    Generate(file io.Writer, templateBytes []byte, templateData interface{}) error
+	Generate(file io.Writer, templateBytes []byte, templateData interface{}) error
 }

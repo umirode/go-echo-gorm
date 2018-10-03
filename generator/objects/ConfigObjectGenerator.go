@@ -25,7 +25,7 @@ func (g *ConfigObjectGenerator) Generate(name string, args []string) error {
 }
 
 func (g *ConfigObjectGenerator) generateConfig(name string) error {
-	outputFilePath := fmt.Sprintf("../configs/%s.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("../configs/%sConfig.go", strcase.ToCamel(name))
 
 	return g.Generator.Generate("../configs/templates/config.txt", outputFilePath, struct {
 		Name string
@@ -35,7 +35,7 @@ func (g *ConfigObjectGenerator) generateConfig(name string) error {
 }
 
 func (g *ConfigObjectGenerator) generateConfigTest(name string) error {
-	outputFilePath := fmt.Sprintf("../configs/%s_test.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("../configs/%sConfig_test.go", strcase.ToCamel(name))
 
 	return g.Generator.Generate("../configs/templates/configTest.txt", outputFilePath, struct {
 		Name string

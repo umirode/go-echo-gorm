@@ -1,9 +1,9 @@
 package interfaces
 
 import (
-    "os"
+	"os"
 )
 
 type IFileCreator interface {
-    Create(filePath string) (*os.File, error)
+	Create(filePath string) (*os.File, error)
 }

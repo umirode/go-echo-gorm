@@ -45,7 +45,10 @@ func (r *{{ .Name | ToCamel }}DatabaseRepository) Add{{ .Name | ToCamel }}({{ .N
 }
 
 func (r *{{ .Name | ToCamel }}DatabaseRepository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
-    err := r.update({{ .Name | ToLowerCamel }}, "FIELD")
+    err := r.update({{ .Name | ToLowerCamel }}, map[string]interface{}{
+        "FIELD": "TEST",
+    })
+
     if err != nil {
         return err
     }

@@ -3,7 +3,7 @@ package models
 type UserModel struct {
 	BaseModel
 
-	Name string `gorm:"size:255" json:"name"`
+	Field string `gorm:"size:255" json:"field"`
 }
 
 func (m *UserModel) TableName() string {

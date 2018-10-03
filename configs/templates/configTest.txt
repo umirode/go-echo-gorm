@@ -5,6 +5,6 @@ import (
     "testing"
 )
 
-func TestGet{{ .Name | ToLowerCamel }}Config(t *testing.T) {
-    assert.NotEmpty(t, Get{{ .Name | ToLowerCamel }}Config())
+func TestGet{{ .Name | ToCamel }}Config(t *testing.T) {
+    assert.NotEmpty(t, Get{{ .Name | ToCamel }}Config())
 }
