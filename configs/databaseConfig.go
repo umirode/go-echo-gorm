@@ -1,34 +1,41 @@
 package configs
 
 import (
-    "sync"
+	"os"
+	"strconv"
+	"sync"
 )
 
 type DatabaseConfig struct {
-    Driver   string
-    Username string
-    Password string
-    Host     string
-    Port     uint
-    Database string
-    Params   string
+	Driver   string
+	Debug    bool
+	Username string
+	Password string
+	Host     string
+	Port     uint
+	Database string
+	Params   string
 }
 
 var databaseConfigOnce sync.Once
 var databaseConfig *DatabaseConfig
 
 func GetDatabaseConfig() *DatabaseConfig {
-    databaseConfigOnce.Do(func() {
-        databaseConfig = &DatabaseConfig{
-            Driver:   "sqlite3",
-            Username: "root",
-            Password: "",
-            Host:     "127.0.0.1",
-            Port:     3306,
-            Database: "app.sqlite3",
-            Params:   "",
-        }
-    })
+	databaseConfigOnce.Do(func() {
+		port, _ := strconv.Atoi(os.Getenv("DATABASE_PORT"))
+		debug, _ := strconv.ParseBool(os.Getenv("DATABASE_DEBUG"))
 
-    return databaseConfig
+		databaseConfig = &DatabaseConfig{
+			Driver:   os.Getenv("DATABASE_DRIVER"),
+			Debug:    debug,
+			Username: os.Getenv("DATABASE_USER"),
+			Password: os.Getenv("DATABASE_PASSWORD"),
+			Host:     os.Getenv("DATABASE_HOST"),
+			Port:     uint(port),
+			Database: os.Getenv("DATABASE_NAME"),
+			Params:   os.Getenv("DATABASE_PARAMS"),
+		}
+	})
+
+	return databaseConfig
 }

@@ -1,11 +1,12 @@
 package database
 
 type Config struct {
-    Driver   string
-    Username string
-    Password string
-    Host     string
-    Port     uint
-    Database string
-    Params   string
+	Driver   string
+	Debug    bool
+	Username string
+	Password string
+	Host     string
+	Port     uint
+	Database string
+	Params   string
 }
