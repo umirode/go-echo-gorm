@@ -20,7 +20,7 @@ func main() {
 	*/
 	err := godotenv.Load()
 	if err != nil {
-		logrus.Fatal("Error loading .env file")
+		logrus.Fatal(err.Error())
 	}
 
 	/**
@@ -41,7 +41,7 @@ func main() {
 	defer db.Close()
 	if err != nil {
 		db.Close()
-		logrus.Fatal("Database error")
+		logrus.Fatal(err.Error())
 	}
 
 	/**
@@ -70,7 +70,16 @@ func getRouter(db *gorm.DB) *echo.Echo {
 	router := echo.New()
 
 	router.HTTPErrorHandler = func(err error, context echo.Context) {
-		response.SendResponseJson(context, "error", err.Error(), "")
+		message := ""
+
+		httpErr, httpErrOk := err.(*echo.HTTPError)
+		if httpErrOk {
+			message = httpErr.Message.(string)
+		} else {
+			message = err.Error()
+		}
+
+		response.SendResponseJson(context, "error", message, "")
 	}
 
 	userController := &controllers.UserController{

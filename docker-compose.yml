@@ -1,0 +1,19 @@
+version: '3'
+services:
+  app:
+    build: .
+    env_file: .env
+    expose:
+      - 8080
+    ports:
+    - 8080:8080
+    links:
+    - database
+  database:
+    image: mysql:8.0
+    env_file: .env
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: ${DATABASE_NAME}
+
