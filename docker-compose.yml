@@ -3,8 +3,9 @@ services:
   app:
     build: .
     env_file: .env
+    restart: always
     expose:
-      - 8080
+    - 8080
     ports:
     - 8080:8080
     links:
@@ -12,6 +13,7 @@ services:
   database:
     image: mysql:8.0
     env_file: .env
+    restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'

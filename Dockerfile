@@ -23,11 +23,13 @@ RUN \
 COPY . ./
 RUN \
     GOOS=linux \
-    go build -o /build/app . && \
+    go build -i -o /build/app . && \
     \
     cp .env /build/ && \
-    cp wait-for-it.sh /build/ && \
     \
     apk del .build-dependencies
 
-CMD /build/wait-for-it.sh --host=${DATABASE_HOST} --port=${DATABASE_PORT} --timeout=60 -- /build/app
+ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /build/wait.sh
+RUN chmod +x /build/wait.sh
+
+CMD /build/wait.sh --host=${DATABASE_HOST} --port=${DATABASE_PORT} --timeout=60 -- /build/app
