@@ -1,8 +1,8 @@
 package repositories
 
 import (
-    "github.com/umirode/go-rest/models"
     "github.com/stretchr/testify/mock"
+    "github.com/umirode/go-rest/models"
 )
 
 type Mock{{ .Name | ToCamel }}Repository struct {
@@ -17,10 +17,10 @@ func (r *Mock{{ .Name | ToCamel }}Repository) FindAll() *[]models.{{ .Name | ToC
     return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
 }
 
-func (r *Mock{{ .Name | ToCamel }}Repository) FindSingleById(id uint) *models.{{ .Name | ToCamel }}Model {
+func (r *Mock{{ .Name | ToCamel }}Repository) FindSingleById(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     args := r.Called(id)
 
-    return args.Get(0).(*models.{{ .Name | ToCamel }}Model)
+    return args.Get(0).(*models.{{ .Name | ToCamel }}Model), args.Error(1)
 }
 
 func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {

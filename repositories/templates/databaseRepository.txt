@@ -1,8 +1,8 @@
 package repositories
 
 import (
-    "github.com/umirode/go-rest/models"
     "github.com/jinzhu/gorm"
+    "github.com/umirode/go-rest/models"
 )
 
 type {{ .Name | ToCamel }}DatabaseRepository struct {
@@ -27,21 +27,22 @@ func (r *{{ .Name | ToCamel }}DatabaseRepository) FindAll() *[]models.{{ .Name |
     return &{{ .Name | ToLowerCamel | Plural}}
 }
 
-func (r *{{ .Name | ToCamel }}DatabaseRepository) FindSingleById(id uint) *models.{{ .Name | ToCamel }}Model {
+func (r *{{ .Name | ToCamel }}DatabaseRepository) FindSingleById(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     {{ .Name | ToLowerCamel }} := new(models.{{ .Name | ToCamel }}Model)
 
     r.Database.Where("id = ?", id).First(&{{ .Name | ToLowerCamel }})
 
-    return {{ .Name | ToLowerCamel }}
+	if {{ .Name | ToLowerCamel }}.ID == 0 {
+		return nil, errors.NewNotFoundError()
+	}
+
+	return {{ .Name | ToLowerCamel }}, nil
 }
 
 func (r *{{ .Name | ToCamel }}DatabaseRepository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
     err := r.create({{ .Name | ToLowerCamel }})
-    if err != nil {
-        return err
-    }
 
-    return nil
+    return err
 }
 
 func (r *{{ .Name | ToCamel }}DatabaseRepository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
@@ -49,18 +50,11 @@ func (r *{{ .Name | ToCamel }}DatabaseRepository) Update{{ .Name | ToCamel }}({{
         "FIELD": "TEST",
     })
 
-    if err != nil {
-        return err
-    }
-
-    return nil
+    return err
 }
 
 func (r *{{ .Name | ToCamel }}DatabaseRepository) Delete{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
     err := r.delete({{ .Name | ToLowerCamel }})
-    if err != nil {
-        return err
-    }
 
-    return nil
+    return err
 }

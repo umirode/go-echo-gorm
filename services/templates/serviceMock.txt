@@ -1,8 +1,8 @@
 package services
 
 import (
-    "github.com/umirode/go-rest/models"
     "github.com/stretchr/testify/mock"
+    "github.com/umirode/go-rest/models"
 )
 
 type {{ .Name | ToCamel }}ServiceMock struct {
@@ -11,13 +11,13 @@ type {{ .Name | ToCamel }}ServiceMock struct {
     I{{ .Name | ToCamel }}Service
 }
 
-func (s *{{ .Name | ToCamel }}ServiceMock) Get{{ .Name | ToCamel }}ByID(id uint) *models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}ServiceMock) Get{{ .Name | ToCamel }}ByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     args := s.Called(id)
 
     return args.Get(0).(*models.{{ .Name | ToCamel }}Model)
 }
 
-func (s *{{ .Name | ToCamel }}ServiceMock) GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}ServiceMock) GetAll{{ .Name | ToCamel | Plural }}() (*[]models.{{ .Name | ToCamel }}Model, error) {
     args := s.Called()
 
     return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)

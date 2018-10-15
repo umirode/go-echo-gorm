@@ -17,10 +17,10 @@ func (r *MockUserRepository) FindAll() *[]models.UserModel {
 	return args.Get(0).(*[]models.UserModel)
 }
 
-func (r *MockUserRepository) FindSingleById(id uint) *models.UserModel {
+func (r *MockUserRepository) FindSingleById(id uint) (*models.UserModel, error) {
 	args := r.Called(id)
 
-	return args.Get(0).(*models.UserModel)
+	return args.Get(0).(*models.UserModel), args.Error(1)
 }
 
 func (r *MockUserRepository) AddUser(user *models.UserModel) error {

@@ -1,45 +1,37 @@
 package controllers
 
 import (
-    "errors"
-    "strconv"
+	"github.com/umirode/go-rest/errors"
+	"strconv"
 )
 
 type BaseController struct{}
 
 type iGetParamContext interface {
-    Param(name string) string
+	Param(name string) string
 }
 
-func (c *BaseController) getParam(context iGetParamContext, key string, valueType string) interface{} {
-    param := context.Param(key)
-    if param == "" {
-        return nil
-    }
+func (c *BaseController) getParam(context iGetParamContext, key string, valueType string) (interface{}, error) {
+	param := context.Param(key)
+	if param == "" {
+		return nil, errors.NewRequestParsingError()
+	}
 
-    switch valueType {
-    case "int":
-        result, _ := strconv.Atoi(param)
+	switch valueType {
+	case "int":
+		result, _ := strconv.Atoi(param)
 
-        return result
-        break
-    case "uint":
-        result, _ := strconv.Atoi(param)
+		return result, nil
+		break
+	case "uint":
+		result, _ := strconv.Atoi(param)
 
-        return uint(result)
-        break
-    case "string":
-        return param
-        break
-    }
+		return uint(result), nil
+		break
+	case "string":
+		return param, nil
+		break
+	}
 
-    return nil
-}
-
-func (c *BaseController) getNotExistsError() error {
-    return errors.New("Not exists ")
-}
-
-func (c *BaseController) getQueryParsingError() error {
-    return errors.New("Query parsing error ")
+	return nil, errors.NewRequestParsingError()
 }

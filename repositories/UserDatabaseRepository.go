@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"github.com/jinzhu/gorm"
+	"github.com/umirode/go-rest/errors"
 	"github.com/umirode/go-rest/models"
 )
 
@@ -27,40 +28,34 @@ func (r *UserDatabaseRepository) FindAll() *[]models.UserModel {
 	return &users
 }
 
-func (r *UserDatabaseRepository) FindSingleById(id uint) *models.UserModel {
+func (r *UserDatabaseRepository) FindSingleById(id uint) (*models.UserModel, error) {
 	user := new(models.UserModel)
 
 	r.Database.Where("id = ?", id).First(&user)
 
-	return user
+	if user.ID == 0 {
+		return nil, errors.NewNotFoundError()
+	}
+
+	return user, nil
 }
 
 func (r *UserDatabaseRepository) AddUser(user *models.UserModel) error {
 	err := r.create(user)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 func (r *UserDatabaseRepository) UpdateUser(user *models.UserModel) error {
 	err := r.update(user, map[string]interface{}{
-		"FIELD": "TEST",
+		"name": user.Name,
 	})
 
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func (r *UserDatabaseRepository) DeleteUser(user *models.UserModel) error {
 	err := r.delete(user)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }

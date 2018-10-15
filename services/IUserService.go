@@ -5,8 +5,8 @@ import (
 )
 
 type IUserService interface {
-	GetUserByID(id uint) *models.UserModel
-	GetAllUsers() *[]models.UserModel
+	GetUserByID(id uint) (*models.UserModel, error)
+	GetAllUsers() (*[]models.UserModel, error)
 
 	CreateUser(user *models.UserModel) error
 	UpdateUser(id uint, user *models.UserModel) error

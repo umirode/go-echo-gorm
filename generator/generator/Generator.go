@@ -17,10 +17,10 @@ func (g *Generator) Generate(templateFilePath string, outputFilePath string, tem
 	}
 
 	outputFile, err := g.FileCreator.Create(outputFilePath)
-	defer outputFile.Close()
 	if err != nil {
 		return err
 	}
+	defer outputFile.Close()
 
 	return g.TemplateGenerator.Generate(outputFile, templateBytes, templateData)
 }

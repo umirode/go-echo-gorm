@@ -1,85 +1,90 @@
 package controllers
 
 import (
-    "github.com/labstack/echo"
-    "github.com/umirode/go-rest/models"
-    "github.com/umirode/go-rest/response"
-    "github.com/umirode/go-rest/services"
+	"github.com/labstack/echo"
+	"github.com/umirode/go-rest/errors"
+	"github.com/umirode/go-rest/models"
+	"github.com/umirode/go-rest/response"
+	"github.com/umirode/go-rest/services"
+	"net/http"
 )
 
 type UserController struct {
-    BaseController
+	BaseController
 
-    UserService services.IUserService
+	UserService services.IUserService
 }
 
 func (c *UserController) GetAllUsers(context echo.Context) error {
-    users := c.UserService.GetAllUsers()
+	users, err := c.UserService.GetAllUsers()
+	if err != nil {
+		return err
+	}
 
-    return response.SendResponseJson(context, "success", "", users)
+	return response.SendResponseJson(context, http.StatusOK, users)
 }
 
 func (c *UserController) GetSingleUser(context echo.Context) error {
-    id := c.getParam(context, "id", "uint").(uint)
-    if id == 0 {
-        return c.getQueryParsingError()
-    }
+	id, err := c.getParam(context, "id", "uint")
+	if err != nil {
+		return err
+	}
 
-    user := c.UserService.GetUserByID(id)
-    if user == nil {
-        return c.getNotExistsError()
-    }
+	user, err := c.UserService.GetUserByID(id.(uint))
+	if err != nil {
+		return err
+	}
 
-    return response.SendResponseJson(context, "success", "", user)
+	return response.SendResponseJson(context, http.StatusOK, user)
 }
 
 func (c *UserController) CreateUser(context echo.Context) error {
-    user := new(models.UserModel)
+	user := new(models.UserModel)
 
-    err := context.Bind(user)
-    if err != nil {
-        return err
-    }
+	err := context.Bind(user)
+	if err != nil {
+		return errors.NewRequestParsingError()
+	}
 
-    err = c.UserService.CreateUser(user)
-    if err != nil {
-        return err
-    }
+	err = c.UserService.CreateUser(user)
+	if err != nil {
+		return err
+	}
 
-    return response.SendResponseJson(context, "success", "", nil)
+	return response.SendResponseJson(context, http.StatusOK, nil)
 }
 
 func (c *UserController) UpdateUser(context echo.Context) error {
-    id := c.getParam(context, "id", "uint").(uint)
-    if id == 0 {
-        return c.getQueryParsingError()
-    }
+	id, err := c.getParam(context, "id", "uint")
+	if err != nil {
+		return err
+	}
 
-    user := new(models.UserModel)
+	user := new(models.UserModel)
 
-    err := context.Bind(user)
-    if err != nil {
-        return err
-    }
+	err = context.Bind(user)
+	if err != nil {
+		return errors.NewRequestParsingError()
+	}
 
-    err = c.UserService.UpdateUser(id, user)
-    if err != nil {
-        return err
-    }
+	err = c.UserService.UpdateUser(id.(uint), user)
+	if err != nil {
+		return err
+	}
 
-    return response.SendResponseJson(context, "success", "", nil)
+	return response.SendResponseJson(context, http.StatusOK, nil)
 }
 
 func (c *UserController) DeleteUser(context echo.Context) error {
-    id := c.getParam(context, "id", "uint").(uint)
-    if id == 0 {
-        return c.getQueryParsingError()
-    }
+	id, err := c.getParam(context, "id", "uint")
+	if err != nil {
+		return err
+	}
 
-    err := c.UserService.DeleteUser(id)
-    if err != nil {
-        return err
-    }
+	err = c.UserService.DeleteUser(id.(uint))
+	if err != nil {
+		return err
+	}
 
-    return response.SendResponseJson(context, "success", "", nil)
+	return response.SendResponseJson(context, http.StatusOK, nil)
 }

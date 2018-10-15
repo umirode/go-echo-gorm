@@ -1,8 +1,8 @@
 package services
 
 import (
-    "github.com/umirode/go-rest/repositories"
     "github.com/umirode/go-rest/models"
+    "github.com/umirode/go-rest/repositories"
 )
 
 type {{ .Name | ToCamel }}Service struct {
@@ -13,7 +13,7 @@ type {{ .Name | ToCamel }}Service struct {
     Repository repositories.I{{ .Name | ToCamel }}Repository
 }
 
-func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) *models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     {{ .Name | ToLowerCamel }} := s.Repository.FindSingleById(id)
 
     if {{ .Name | ToLowerCamel }}.ID == 0 {
@@ -23,7 +23,7 @@ func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) *mo
     return {{ .Name | ToLowerCamel }}
 }
 
-func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model {
+func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel | Plural }}() (*[]models.{{ .Name | ToCamel }}Model, error) {
     {{ .Name | ToLowerCamel | Plural}} := s.Repository.FindAll()
 
     return {{ .Name | ToLowerCamel | Plural}}

@@ -10,5 +10,5 @@ type I{{ .Name | ToCamel }}Repository interface {
     Delete{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error
 
     FindAll() *[]models.{{ .Name | ToCamel }}Model
-    FindSingleById(id uint) *models.{{ .Name | ToCamel }}Model
+    FindSingleById(id uint) (*models.{{ .Name | ToCamel }}Model, error)
 }

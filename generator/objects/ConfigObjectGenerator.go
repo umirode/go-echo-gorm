@@ -12,11 +12,8 @@ type ConfigObjectGenerator struct {
 
 func (g *ConfigObjectGenerator) Generate(name string, args []string) error {
 	err := g.generateConfig(name)
-	if err != nil {
-		return err
-	}
 
-	return nil
+	return err
 }
 
 func (g *ConfigObjectGenerator) generateConfig(name string) error {

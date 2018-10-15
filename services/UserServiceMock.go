@@ -11,16 +11,16 @@ type UserServiceMock struct {
 	IUserService
 }
 
-func (s *UserServiceMock) GetUserByID(id uint) *models.UserModel {
+func (s *UserServiceMock) GetUserByID(id uint) (*models.UserModel, error) {
 	args := s.Called(id)
 
-	return args.Get(0).(*models.UserModel)
+	return args.Get(0).(*models.UserModel), args.Error(1)
 }
 
-func (s *UserServiceMock) GetAllUsers() *[]models.UserModel {
+func (s *UserServiceMock) GetAllUsers() (*[]models.UserModel, error) {
 	args := s.Called()
 
-	return args.Get(0).(*[]models.UserModel)
+	return args.Get(0).(*[]models.UserModel), args.Error(1)
 }
 
 func (s *UserServiceMock) CreateUser(user *models.UserModel) error {

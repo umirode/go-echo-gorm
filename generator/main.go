@@ -48,11 +48,8 @@ func main() {
 		}
 
 		err := handler.Generate(name, params)
-		if err != nil {
-			return err
-		}
 
-		return nil
+		return err
 	}
 
 	err := app.Run(os.Args)
@@ -79,6 +76,9 @@ func getHandlers() map[string]objects.IObjectGenerator {
 			Generator: gen,
 		},
 		"config": &objects.ConfigObjectGenerator{
+			Generator: gen,
+		},
+		"middleware": &objects.MiddlewareObjectGenerator{
 			Generator: gen,
 		},
 	}

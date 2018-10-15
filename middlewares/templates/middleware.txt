@@ -1,0 +1,20 @@
+package middlewares
+
+import (
+	"github.com/labstack/echo"
+)
+
+type {{ .Name | ToCamel }}Middleware struct{
+    IMiddleware
+}
+
+func New{{ .Name | ToCamel }}Middleware() *{{ .Name | ToCamel }}Middleware {
+	return &{{ .Name | ToCamel }}Middleware{}
+}
+
+func (m *{{ .Name | ToCamel }}Middleware) Middleware(next echo.HandlerFunc) echo.HandlerFunc {
+	return func(c echo.Context) error {
+
+		return next(c)
+	}
+}

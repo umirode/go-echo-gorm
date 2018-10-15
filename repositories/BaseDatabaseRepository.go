@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"errors"
 	"github.com/jinzhu/gorm"
+	"github.com/umirode/go-rest/errors"
 )
 
 type BaseDatabaseRepository struct {
@@ -11,7 +11,7 @@ type BaseDatabaseRepository struct {
 
 func (r *BaseDatabaseRepository) create(i interface{}) error {
 	if !r.Database.NewRecord(i) {
-		return r.getAlreadyExistsError()
+		return errors.NewAlreadyExistsError()
 	}
 
 	r.Database.Create(i)
@@ -21,12 +21,12 @@ func (r *BaseDatabaseRepository) create(i interface{}) error {
 
 func (r *BaseDatabaseRepository) update(i interface{}, data map[string]interface{}) error {
 	if r.Database.NewRecord(i) {
-		return r.getNotExistsError()
+		return errors.NewNotFoundError()
 	}
 
 	result := r.Database.Model(i).Updates(data)
-	if result.RecordNotFound() {
-		return r.getNotExistsError()
+	if result.RowsAffected == 0 {
+		return errors.NewNotFoundError()
 	}
 
 	return nil
@@ -34,21 +34,13 @@ func (r *BaseDatabaseRepository) update(i interface{}, data map[string]interface
 
 func (r *BaseDatabaseRepository) delete(i interface{}) error {
 	if r.Database.NewRecord(i) {
-		return r.getNotExistsError()
+		return errors.NewNotFoundError()
 	}
 
 	result := r.Database.Delete(i)
-	if result.RecordNotFound() {
-		return r.getNotExistsError()
+	if result.RowsAffected == 0 {
+		return errors.NewNotFoundError()
 	}
 
 	return nil
-}
-
-func (r *BaseDatabaseRepository) getNotExistsError() error {
-	return errors.New("Not exists ")
-}
-
-func (r *BaseDatabaseRepository) getAlreadyExistsError() error {
-	return errors.New("Already exists ")
 }

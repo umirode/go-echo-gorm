@@ -13,20 +13,16 @@ type UserService struct {
 	Repository repositories.IUserRepository
 }
 
-func (s *UserService) GetUserByID(id uint) *models.UserModel {
-	user := s.Repository.FindSingleById(id)
+func (s *UserService) GetUserByID(id uint) (*models.UserModel, error) {
+	user, err := s.Repository.FindSingleById(id)
 
-	if user.ID == 0 {
-		return nil
-	}
-
-	return user
+	return user, err
 }
 
-func (s *UserService) GetAllUsers() *[]models.UserModel {
+func (s *UserService) GetAllUsers() (*[]models.UserModel, error) {
 	users := s.Repository.FindAll()
 
-	return users
+	return users, nil
 }
 
 func (s *UserService) CreateUser(user *models.UserModel) error {

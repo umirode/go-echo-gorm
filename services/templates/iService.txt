@@ -5,8 +5,8 @@ import (
 )
 
 type I{{ .Name | ToCamel }}Service interface {
-    Get{{ .Name | ToCamel }}ByID(id uint) *models.{{ .Name | ToCamel }}Model
-    GetAll{{ .Name | ToCamel | Plural }}() *[]models.{{ .Name | ToCamel }}Model
+    Get{{ .Name | ToCamel }}ByID(id uint) (*models.{{ .Name | ToCamel }}Model, error)
+    GetAll{{ .Name | ToCamel | Plural }}() (*[]models.{{ .Name | ToCamel }}Model, error)
 
     Create{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error
     Update{{ .Name | ToCamel }}(id uint, {{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error

@@ -9,8 +9,8 @@ import (
 	"github.com/umirode/go-rest/configs"
 	"github.com/umirode/go-rest/controllers"
 	"github.com/umirode/go-rest/database"
+	"github.com/umirode/go-rest/errors"
 	"github.com/umirode/go-rest/repositories"
-	"github.com/umirode/go-rest/response"
 	"github.com/umirode/go-rest/services"
 )
 
@@ -30,6 +30,7 @@ func main() {
 	db, err := database.NewDatabase(
 		&database.Config{
 			Driver:   databaseConfig.Driver,
+			Debug:    databaseConfig.Debug,
 			Database: databaseConfig.Database,
 			Host:     databaseConfig.Host,
 			Port:     databaseConfig.Port,
@@ -38,11 +39,10 @@ func main() {
 			Params:   databaseConfig.Params,
 		},
 	)
-	defer db.Close()
 	if err != nil {
-		db.Close()
 		logrus.Fatal(err.Error())
 	}
+	defer db.Close()
 
 	/**
 	Run migrations
@@ -50,15 +50,15 @@ func main() {
 	database.RunMigrations(db)
 
 	/**
-	Get router
-	*/
-	router := getRouter(db)
-
-	/**
 	Get server address
 	*/
 	serverConfig := configs.GetServerConfig()
 	serverAddress := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
+
+	/**
+	Get router
+	*/
+	router := getRouter(db)
 
 	/**
 	Start server
@@ -69,18 +69,7 @@ func main() {
 func getRouter(db *gorm.DB) *echo.Echo {
 	router := echo.New()
 
-	router.HTTPErrorHandler = func(err error, context echo.Context) {
-		message := ""
-
-		httpErr, httpErrOk := err.(*echo.HTTPError)
-		if httpErrOk {
-			message = httpErr.Message.(string)
-		} else {
-			message = err.Error()
-		}
-
-		response.SendResponseJson(context, "error", message, "")
-	}
+	router.HTTPErrorHandler = errors.NewHTTPErrorHandler().Handler
 
 	userController := &controllers.UserController{
 		UserService: &services.UserService{

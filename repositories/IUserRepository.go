@@ -10,5 +10,5 @@ type IUserRepository interface {
 	DeleteUser(user *models.UserModel) error
 
 	FindAll() *[]models.UserModel
-	FindSingleById(id uint) *models.UserModel
+	FindSingleById(id uint) (*models.UserModel, error)
 }
