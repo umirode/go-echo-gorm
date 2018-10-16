@@ -17,9 +17,9 @@ func (g *ConfigObjectGenerator) Generate(name string, args []string) error {
 }
 
 func (g *ConfigObjectGenerator) generateConfig(name string) error {
-	outputFilePath := fmt.Sprintf("../configs/%sConfig.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("configs/%sConfig.go", strcase.ToCamel(name))
 
-	return g.Generator.Generate("../configs/templates/config.txt", outputFilePath, struct {
+	return g.Generator.Generate("configs/templates/config.txt", outputFilePath, struct {
 		Name string
 	}{
 		Name: name,

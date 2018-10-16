@@ -1,6 +1,8 @@
 package models
 
 type {{ .Name | ToCamel }}Model struct {
+	IModel `json:"-"`
+
     BaseModel
 
     Field string `gorm:"size:255" json:"field"`

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -14,17 +15,21 @@ import (
 func main() {
 	app := cli.NewApp()
 
+	app.Name = "Boilerplate code generator"
+	app.Usage = ""
+	app.UsageText = "GENERATOR -t TYPE -n NAME -p PARAMS"
+
 	app.Flags = []cli.Flag{
 		&cli.StringFlag{
-			Name:  "type",
+			Name:  "type, t",
 			Usage: "What are you want to generate",
 		},
 		&cli.StringFlag{
-			Name:  "name",
+			Name:  "name, n",
 			Usage: "Name for generated object",
 		},
 		&cli.StringSliceFlag{
-			Name:  "param",
+			Name:  "param, p",
 			Usage: "Params",
 		},
 	}
@@ -44,7 +49,7 @@ func main() {
 
 		handler := getHandlers()[object]
 		if handler == nil {
-			return errors.New("Type not found")
+			return errors.New(fmt.Sprintf("Type \"%s\" not found", object))
 		}
 
 		err := handler.Generate(name, params)

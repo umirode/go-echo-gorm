@@ -30,9 +30,9 @@ func (g *RepositoryObjectGenerator) Generate(name string, args []string) error {
 }
 
 func (g *RepositoryObjectGenerator) generateDatabaseRepository(name string) error {
-	outputFilePath := fmt.Sprintf("../repositories/%sDatabaseRepository.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("repositories/%sDatabaseRepository.go", strcase.ToCamel(name))
 
-	return g.Generator.Generate("../repositories/templates/databaseRepository.txt", outputFilePath, struct {
+	return g.Generator.Generate("repositories/templates/databaseRepository.txt", outputFilePath, struct {
 		Name string
 	}{
 		Name: name,
@@ -40,9 +40,9 @@ func (g *RepositoryObjectGenerator) generateDatabaseRepository(name string) erro
 }
 
 func (g *RepositoryObjectGenerator) generateRepositoryMock(name string) error {
-	outputFilePath := fmt.Sprintf("../repositories/%sRepositoryMock.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("repositories/%sRepositoryMock.go", strcase.ToCamel(name))
 
-	return g.Generator.Generate("../repositories/templates/repositoryMock.txt", outputFilePath, struct {
+	return g.Generator.Generate("repositories/templates/repositoryMock.txt", outputFilePath, struct {
 		Name string
 	}{
 		Name: name,
@@ -50,9 +50,9 @@ func (g *RepositoryObjectGenerator) generateRepositoryMock(name string) error {
 }
 
 func (g *RepositoryObjectGenerator) generateIRepository(name string) error {
-	outputFilePath := fmt.Sprintf("../repositories/I%sRepository.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("repositories/I%sRepository.go", strcase.ToCamel(name))
 
-	return g.Generator.Generate("../repositories/templates/iRepository.txt", outputFilePath, struct {
+	return g.Generator.Generate("repositories/templates/iRepository.txt", outputFilePath, struct {
 		Name string
 	}{
 		Name: name,
