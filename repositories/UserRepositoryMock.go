@@ -20,6 +20,17 @@ func (r *MockUserRepository) FindSingleByEmailAndPassword(email string, password
 	return nil, args.Error(1)
 }
 
+func (r *MockUserRepository) FindSingleByEmail(email string) (*models.UserModel, error) {
+	args := r.Called(email)
+
+	user, ok := args.Get(0).(*models.UserModel)
+	if ok {
+		return user, args.Error(1)
+	}
+
+	return nil, args.Error(1)
+}
+
 func (r *MockUserRepository) FindAll() *[]models.UserModel {
 	args := r.Called()
 

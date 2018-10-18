@@ -11,7 +11,7 @@ type UserModel struct {
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 
 	Email    string `gorm:"not null;unique;size:255" json:"email"`
-	Password string `gorm:"size:255" json:"-"`
+	Password string `gorm:"not null;size:255" json:"-"`
 
 	JWTRefreshTokens []JWTRefreshTokenModel `gorm:"foreignkey:UserID"`
 }

@@ -168,7 +168,7 @@ func TestAuthService_Signup(t *testing.T) {
 	userRepository := &repositories.MockUserRepository{}
 
 	userRepository.On("AddUser", mock.Anything).Return(nil)
-	userRepository.On("FindSingleByEmailAndPassword", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(nil, nil)
+	userRepository.On("FindSingleByEmail", mock.AnythingOfType("string")).Return(nil, nil)
 
 	jwtRefreshTokenRepository := &repositories.MockJWTRefreshTokenRepository{}
 

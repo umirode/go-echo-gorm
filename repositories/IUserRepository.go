@@ -12,4 +12,5 @@ type IUserRepository interface {
 	FindAll() *[]models.UserModel
 	FindSingleByID(id uint) (*models.UserModel, error)
 	FindSingleByEmailAndPassword(email string, password string) (*models.UserModel, error)
+	FindSingleByEmail(email string) (*models.UserModel, error)
 }

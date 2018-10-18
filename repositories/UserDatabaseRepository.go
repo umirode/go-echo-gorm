@@ -18,6 +18,18 @@ func NewUserDatabaseRepository(database *gorm.DB) *UserDatabaseRepository {
 	return repository
 }
 
+func (r *UserDatabaseRepository) FindSingleByEmail(email string) (*models.UserModel, error) {
+	user := new(models.UserModel)
+
+	r.Database.Where("email = ?", email).First(&user)
+
+	if user.ID == 0 {
+		return nil, errors.NewNotFoundError()
+	}
+
+	return user, nil
+}
+
 func (r *UserDatabaseRepository) FindSingleByEmailAndPassword(email string, password string) (*models.UserModel, error) {
 	user := new(models.UserModel)
 
