@@ -13,5 +13,14 @@ func TestNewDatabase(t *testing.T) {
 	})
 
 	assert.NotEmpty(t, db)
-	assert.Empty(t, err)
+	assert.NoError(t, err)
+}
+
+func TestNewDatabase_Error(t *testing.T) {
+	db, err := NewDatabase(&Config{
+		Driver: "test",
+	})
+
+	assert.Empty(t, db)
+	assert.Error(t, err)
 }

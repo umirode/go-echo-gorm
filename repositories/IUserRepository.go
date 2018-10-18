@@ -10,5 +10,6 @@ type IUserRepository interface {
 	DeleteUser(user *models.UserModel) error
 
 	FindAll() *[]models.UserModel
-	FindSingleById(id uint) (*models.UserModel, error)
+	FindSingleByID(id uint) (*models.UserModel, error)
+	FindSingleByEmailAndPassword(email string, password string) (*models.UserModel, error)
 }

@@ -7,8 +7,6 @@ import (
 
 type Mock{{ .Name | ToCamel }}Repository struct {
     mock.Mock
-
-    I{{ .Name | ToCamel }}Repository
 }
 
 func (r *Mock{{ .Name | ToCamel }}Repository) FindAll() *[]models.{{ .Name | ToCamel }}Model {
@@ -17,7 +15,7 @@ func (r *Mock{{ .Name | ToCamel }}Repository) FindAll() *[]models.{{ .Name | ToC
     return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
 }
 
-func (r *Mock{{ .Name | ToCamel }}Repository) FindSingleById(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
+func (r *Mock{{ .Name | ToCamel }}Repository) FindSingleByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     args := r.Called(id)
 
     return args.Get(0).(*models.{{ .Name | ToCamel }}Model), args.Error(1)

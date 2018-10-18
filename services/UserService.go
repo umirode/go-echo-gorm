@@ -6,27 +6,25 @@ import (
 )
 
 type UserService struct {
-	IUserService
-
 	BaseService
 
-	Repository repositories.IUserRepository
+	UserRepository repositories.IUserRepository
 }
 
 func (s *UserService) GetUserByID(id uint) (*models.UserModel, error) {
-	user, err := s.Repository.FindSingleById(id)
+	user, err := s.UserRepository.FindSingleByID(id)
 
 	return user, err
 }
 
 func (s *UserService) GetAllUsers() (*[]models.UserModel, error) {
-	users := s.Repository.FindAll()
+	users := s.UserRepository.FindAll()
 
 	return users, nil
 }
 
 func (s *UserService) CreateUser(user *models.UserModel) error {
-	err := s.Repository.AddUser(user)
+	err := s.UserRepository.AddUser(user)
 
 	return err
 }
@@ -34,7 +32,7 @@ func (s *UserService) CreateUser(user *models.UserModel) error {
 func (s *UserService) UpdateUser(id uint, user *models.UserModel) error {
 	user.ID = id
 
-	err := s.Repository.UpdateUser(user)
+	err := s.UserRepository.UpdateUser(user)
 
 	return err
 }
@@ -43,7 +41,7 @@ func (s *UserService) DeleteUser(id uint) error {
 	user := new(models.UserModel)
 	user.ID = id
 
-	err := s.Repository.DeleteUser(user)
+	err := s.UserRepository.DeleteUser(user)
 
 	return err
 }

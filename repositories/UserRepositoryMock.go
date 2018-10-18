@@ -7,20 +7,39 @@ import (
 
 type MockUserRepository struct {
 	mock.Mock
+}
 
-	IUserRepository
+func (r *MockUserRepository) FindSingleByEmailAndPassword(email string, password string) (*models.UserModel, error) {
+	args := r.Called(email, password)
+
+	user, ok := args.Get(0).(*models.UserModel)
+	if ok {
+		return user, args.Error(1)
+	}
+
+	return nil, args.Error(1)
 }
 
 func (r *MockUserRepository) FindAll() *[]models.UserModel {
 	args := r.Called()
 
-	return args.Get(0).(*[]models.UserModel)
+	users, ok := args.Get(0).(*[]models.UserModel)
+	if ok {
+		return users
+	}
+
+	return nil
 }
 
-func (r *MockUserRepository) FindSingleById(id uint) (*models.UserModel, error) {
+func (r *MockUserRepository) FindSingleByID(id uint) (*models.UserModel, error) {
 	args := r.Called(id)
 
-	return args.Get(0).(*models.UserModel), args.Error(1)
+	user, ok := args.Get(0).(*models.UserModel)
+	if ok {
+		return user, args.Error(1)
+	}
+
+	return nil, args.Error(1)
 }
 
 func (r *MockUserRepository) AddUser(user *models.UserModel) error {

@@ -3,11 +3,11 @@ package objects
 import (
 	"fmt"
 	"github.com/iancoleman/strcase"
-	"github.com/umirode/go-rest/generator/generator/interfaces"
+	"github.com/umirode/go-rest/generator/generator"
 )
 
 type RepositoryObjectGenerator struct {
-	Generator interfaces.IGenerator
+	Generator generator.IGenerator
 }
 
 func (g *RepositoryObjectGenerator) Generate(name string, args []string) error {

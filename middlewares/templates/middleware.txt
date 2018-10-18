@@ -4,9 +4,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-type {{ .Name | ToCamel }}Middleware struct{
-    IMiddleware
-}
+type {{ .Name | ToCamel }}Middleware struct{}
 
 func New{{ .Name | ToCamel }}Middleware() *{{ .Name | ToCamel }}Middleware {
 	return &{{ .Name | ToCamel }}Middleware{}

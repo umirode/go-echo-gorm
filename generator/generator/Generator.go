@@ -1,13 +1,9 @@
 package generator
 
-import (
-	"github.com/umirode/go-rest/generator/generator/interfaces"
-)
-
 type Generator struct {
-	FileCreator       interfaces.IFileCreator
-	TemplateReader    interfaces.ITemplateReader
-	TemplateGenerator interfaces.ITemplateGenerator
+	FileCreator       IFileCreator
+	TemplateReader    ITemplateReader
+	TemplateGenerator ITemplateGenerator
 }
 
 func (g *Generator) Generate(templateFilePath string, outputFilePath string, templateData interface{}) error {

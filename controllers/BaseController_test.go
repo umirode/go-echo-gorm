@@ -32,6 +32,37 @@ func TestBaseController_getParam(t *testing.T) {
 		value, err := controller.getParam(context, "test", valueType)
 
 		assert.NotEmpty(t, value)
-		assert.Empty(t, err)
+		assert.NoError(t, err)
 	}
+}
+
+func TestBaseController_getParam_EmptyError(t *testing.T) {
+	controller := &BaseController{}
+
+	types := [...]string{
+		"uint",
+		"string",
+		"int",
+	}
+
+	context := &getParamContextMock{}
+	for _, valueType := range types {
+		context.On("Param", mock.Anything).Return("")
+
+		value, err := controller.getParam(context, "test", valueType)
+
+		assert.Empty(t, value)
+		assert.Error(t, err)
+	}
+}
+func TestBaseController_getParam_UndefinedTypeError(t *testing.T) {
+	controller := &BaseController{}
+
+	context := &getParamContextMock{}
+	context.On("Param", mock.Anything).Return("222")
+
+	value, err := controller.getParam(context, "test", "test")
+
+	assert.Empty(t, value)
+	assert.Error(t, err)
 }

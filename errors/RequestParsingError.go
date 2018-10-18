@@ -4,14 +4,14 @@ import (
 	"net/http"
 )
 
-type RequestParsingError struct {
-	Status int
-}
+type RequestParsingError struct{}
 
 func NewRequestParsingError() *RequestParsingError {
-	return &RequestParsingError{
-		Status: http.StatusBadRequest,
-	}
+	return &RequestParsingError{}
+}
+
+func (e *RequestParsingError) Status() int {
+	return http.StatusBadRequest
 }
 
 func (e *RequestParsingError) Error() string {

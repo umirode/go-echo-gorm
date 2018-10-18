@@ -8,8 +8,6 @@ import (
 
 type UserDatabaseRepository struct {
 	BaseDatabaseRepository
-
-	IUserRepository
 }
 
 func NewUserDatabaseRepository(database *gorm.DB) *UserDatabaseRepository {
@@ -20,6 +18,18 @@ func NewUserDatabaseRepository(database *gorm.DB) *UserDatabaseRepository {
 	return repository
 }
 
+func (r *UserDatabaseRepository) FindSingleByEmailAndPassword(email string, password string) (*models.UserModel, error) {
+	user := new(models.UserModel)
+
+	r.Database.Where("email = ? AND password = ?", email, password).First(&user)
+
+	if user.ID == 0 {
+		return nil, errors.NewNotFoundError()
+	}
+
+	return user, nil
+}
+
 func (r *UserDatabaseRepository) FindAll() *[]models.UserModel {
 	users := make([]models.UserModel, 0)
 
@@ -28,7 +38,7 @@ func (r *UserDatabaseRepository) FindAll() *[]models.UserModel {
 	return &users
 }
 
-func (r *UserDatabaseRepository) FindSingleById(id uint) (*models.UserModel, error) {
+func (r *UserDatabaseRepository) FindSingleByID(id uint) (*models.UserModel, error) {
 	user := new(models.UserModel)
 
 	r.Database.Where("id = ?", id).First(&user)
@@ -48,7 +58,7 @@ func (r *UserDatabaseRepository) AddUser(user *models.UserModel) error {
 
 func (r *UserDatabaseRepository) UpdateUser(user *models.UserModel) error {
 	err := r.update(user, map[string]interface{}{
-		"name": user.Name,
+		"password": user.Password,
 	})
 
 	return err

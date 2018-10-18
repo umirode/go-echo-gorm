@@ -20,6 +20,8 @@ func NewRouter(database *gorm.DB, debug bool) *Router {
 		Debug:    debug,
 	}
 
+	router.Router.Validator = structValidator{}
+
 	router.init()
 
 	return router
@@ -33,4 +35,5 @@ func (r *Router) init() {
 	r.Router.HTTPErrorHandler = errors.NewHTTPErrorHandler().Handler
 
 	r.setUserRoutes()
+	r.setAuthRoutes()
 }

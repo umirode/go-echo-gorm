@@ -12,7 +12,6 @@ Golang REST framework
       middleware/         contains middlewares
       models/             contains models 
       repositories/       contains repositories 
-      response/           contains Web controllers response template 
       services/           contains services with main app logic
       router/             contains router and routes
       vendor/             contains dependent 3rd-party packages

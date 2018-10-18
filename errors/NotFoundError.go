@@ -4,14 +4,14 @@ import (
 	"net/http"
 )
 
-type NotFoundError struct {
-	Status int
-}
+type NotFoundError struct{}
 
 func NewNotFoundError() *NotFoundError {
-	return &NotFoundError{
-		Status: http.StatusNotFound,
-	}
+	return &NotFoundError{}
+}
+
+func (e *NotFoundError) Status() int {
+	return http.StatusNotFound
 }
 
 func (e *NotFoundError) Error() string {

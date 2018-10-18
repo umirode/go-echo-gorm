@@ -1,8 +1,9 @@
 package errors
 
 import (
+	"github.com/iancoleman/strcase"
 	"github.com/labstack/echo"
-	"github.com/umirode/go-rest/response"
+	"gopkg.in/go-playground/validator.v9"
 	"net/http"
 )
 
@@ -13,22 +14,34 @@ func NewHTTPErrorHandler() *HTTPErrorHandler {
 }
 
 func (h *HTTPErrorHandler) Handler(err error, context echo.Context) {
-	status := http.StatusInternalServerError
+	message := new(struct {
+		Error interface{} `json:"error"`
+	})
 
 	switch v := err.(type) {
 	case *echo.HTTPError:
-		status = v.Code
+		message.Error = v.Message
+		context.JSON(v.Code, message)
 		break
-	case *AlreadyExistsError:
-		status = v.Status
+	case IHTTPError:
+		message.Error = v.Error()
+		context.JSON(v.Status(), message)
 		break
-	case *NotFoundError:
-		status = v.Status
+	case validator.ValidationErrors:
+
+		data := make(map[string][]string, 0)
+
+		for _, validationErr := range v {
+			field := strcase.ToSnake(validationErr.Field())
+			data[field] = append(data[field], validationErr.Tag())
+		}
+
+		message.Error = data
+		context.JSON(http.StatusUnprocessableEntity, message)
 		break
-	case *RequestParsingError:
-		status = v.Status
+	default:
+		message.Error = v.Error()
+		context.JSON(http.StatusInternalServerError, message)
 		break
 	}
-
-	response.SendResponseJson(context, status, nil)
 }

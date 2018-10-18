@@ -1,11 +1,19 @@
 package models
 
+import (
+	"time"
+)
+
 type UserModel struct {
-	IModel `json:"-"`
+	ID        uint       `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time  `json:"created_at"`
+	UpdatedAt time.Time  `json:"updated_at"`
+	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
 
-	BaseModel
+	Email    string `gorm:"not null;unique;size:255" json:"email"`
+	Password string `gorm:"size:255" json:"-"`
 
-	Name string `gorm:"size:255" json:"name"`
+	JWTRefreshTokens []JWTRefreshTokenModel `gorm:"foreignkey:UserID"`
 }
 
 func (m *UserModel) TableName() string {

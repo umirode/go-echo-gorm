@@ -7,8 +7,6 @@ import (
 
 type {{ .Name | ToCamel }}ServiceMock struct {
     mock.Mock
-
-    I{{ .Name | ToCamel }}Service
 }
 
 func (s *{{ .Name | ToCamel }}ServiceMock) Get{{ .Name | ToCamel }}ByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {

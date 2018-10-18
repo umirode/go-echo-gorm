@@ -2,13 +2,12 @@ package repositories
 
 import (
     "github.com/jinzhu/gorm"
+    "github.com/umirode/go-rest/errors"
     "github.com/umirode/go-rest/models"
 )
 
 type {{ .Name | ToCamel }}DatabaseRepository struct {
     BaseDatabaseRepository
-
-    I{{ .Name | ToCamel }}Repository
 }
 
 func New{{ .Name | ToCamel }}DatabaseRepository(database *gorm.DB) *{{ .Name | ToCamel }}DatabaseRepository {
@@ -27,7 +26,7 @@ func (r *{{ .Name | ToCamel }}DatabaseRepository) FindAll() *[]models.{{ .Name |
     return &{{ .Name | ToLowerCamel | Plural}}
 }
 
-func (r *{{ .Name | ToCamel }}DatabaseRepository) FindSingleById(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
+func (r *{{ .Name | ToCamel }}DatabaseRepository) FindSingleByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     {{ .Name | ToLowerCamel }} := new(models.{{ .Name | ToCamel }}Model)
 
     r.Database.Where("id = ?", id).First(&{{ .Name | ToLowerCamel }})

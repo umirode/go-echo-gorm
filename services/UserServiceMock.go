@@ -7,8 +7,6 @@ import (
 
 type UserServiceMock struct {
 	mock.Mock
-
-	IUserService
 }
 
 func (s *UserServiceMock) GetUserByID(id uint) (*models.UserModel, error) {

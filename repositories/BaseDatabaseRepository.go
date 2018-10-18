@@ -14,12 +14,12 @@ func (r *BaseDatabaseRepository) create(i interface{}) error {
 		return errors.NewAlreadyExistsError()
 	}
 
-	r.Database.Create(i)
+	result := r.Database.Create(i)
 
-	return nil
+	return result.Error
 }
 
-func (r *BaseDatabaseRepository) update(i interface{}, data map[string]interface{}) error {
+func (r *BaseDatabaseRepository) update(i interface{}, data interface{}) error {
 	if r.Database.NewRecord(i) {
 		return errors.NewNotFoundError()
 	}
@@ -29,7 +29,7 @@ func (r *BaseDatabaseRepository) update(i interface{}, data map[string]interface
 		return errors.NewNotFoundError()
 	}
 
-	return nil
+	return result.Error
 }
 
 func (r *BaseDatabaseRepository) delete(i interface{}) error {
@@ -42,5 +42,5 @@ func (r *BaseDatabaseRepository) delete(i interface{}) error {
 		return errors.NewNotFoundError()
 	}
 
-	return nil
+	return result.Error
 }

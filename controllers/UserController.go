@@ -4,7 +4,6 @@ import (
 	"github.com/labstack/echo"
 	"github.com/umirode/go-rest/errors"
 	"github.com/umirode/go-rest/models"
-	"github.com/umirode/go-rest/response"
 	"github.com/umirode/go-rest/services"
 	"net/http"
 )
@@ -21,7 +20,7 @@ func (c *UserController) GetAllUsers(context echo.Context) error {
 		return err
 	}
 
-	return response.SendResponseJson(context, http.StatusOK, users)
+	return context.JSON(http.StatusOK, users)
 }
 
 func (c *UserController) GetSingleUser(context echo.Context) error {
@@ -35,7 +34,7 @@ func (c *UserController) GetSingleUser(context echo.Context) error {
 		return err
 	}
 
-	return response.SendResponseJson(context, http.StatusOK, user)
+	return context.JSON(http.StatusOK, user)
 }
 
 func (c *UserController) CreateUser(context echo.Context) error {
@@ -51,7 +50,7 @@ func (c *UserController) CreateUser(context echo.Context) error {
 		return err
 	}
 
-	return response.SendResponseJson(context, http.StatusOK, nil)
+	return context.JSON(http.StatusOK, nil)
 }
 
 func (c *UserController) UpdateUser(context echo.Context) error {
@@ -72,7 +71,7 @@ func (c *UserController) UpdateUser(context echo.Context) error {
 		return err
 	}
 
-	return response.SendResponseJson(context, http.StatusOK, nil)
+	return context.JSON(http.StatusOK, nil)
 }
 
 func (c *UserController) DeleteUser(context echo.Context) error {
@@ -86,5 +85,5 @@ func (c *UserController) DeleteUser(context echo.Context) error {
 		return err
 	}
 
-	return response.SendResponseJson(context, http.StatusOK, nil)
+	return context.JSON(http.StatusOK, nil)
 }

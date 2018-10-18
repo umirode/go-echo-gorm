@@ -6,15 +6,13 @@ import (
 )
 
 type {{ .Name | ToCamel }}Service struct {
-    I{{ .Name | ToCamel }}Service
-
     BaseService
 
     Repository repositories.I{{ .Name | ToCamel }}Repository
 }
 
 func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
-    {{ .Name | ToLowerCamel }} := s.Repository.FindSingleById(id)
+    {{ .Name | ToLowerCamel }} := s.Repository.FindSingleByID(id)
 
     if {{ .Name | ToLowerCamel }}.ID == 0 {
         return nil

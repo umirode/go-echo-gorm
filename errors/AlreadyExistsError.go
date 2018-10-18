@@ -4,14 +4,14 @@ import (
 	"net/http"
 )
 
-type AlreadyExistsError struct {
-	Status int
-}
+type AlreadyExistsError struct{}
 
 func NewAlreadyExistsError() *AlreadyExistsError {
-	return &AlreadyExistsError{
-		Status: http.StatusConflict,
-	}
+	return &AlreadyExistsError{}
+}
+
+func (e *AlreadyExistsError) Status() int {
+	return http.StatusConflict
 }
 
 func (e *AlreadyExistsError) Error() string {
