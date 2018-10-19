@@ -17,6 +17,12 @@ type AuthService struct {
 	JWTRefreshTokenRepository repositories.IJWTRefreshTokenRepository
 }
 
+func (s *AuthService) DeleteUserByEmail(email string) error {
+	err := s.UserRepository.DeleteUserByEmail(email)
+
+	return err
+}
+
 func (s *AuthService) Login(email string, password string, userIP string, config JWTConfig) (string, string, int64, error) {
 	// Get password hash
 	passwordHash, err := s.GetPasswordHash(password)
@@ -31,13 +37,13 @@ func (s *AuthService) Login(email string, password string, userIP string, config
 	}
 
 	// Create assess token
-	token, expiresAt, err := s.CreateJWTToken(user, userIP, config.Secret, config.ExpiresAt)
+	token, expiresAt, err := s.CreateJWTToken(user.ID, userIP, config.Secret, config.ExpiresAt)
 	if err != nil {
 		return "", "", 0, err
 	}
 
 	// Create refresh token
-	refreshToken, _, err := s.CreateJWTToken(user, userIP, config.RefreshSecret, config.RefreshExpiresAt)
+	refreshToken, _, err := s.CreateJWTToken(user.ID, userIP, config.RefreshSecret, config.RefreshExpiresAt)
 	if err != nil {
 		return "", "", 0, err
 	}
@@ -48,7 +54,7 @@ func (s *AuthService) Login(email string, password string, userIP string, config
 	}
 
 	// Check refresh tokens in database and delete them if more than 10
-	err = s.DeleteUserRefreshTokensIfMore(user, 10)
+	err = s.DeleteUserRefreshTokensIfMore(user.ID, 10)
 	if err != nil {
 		return "", "", 0, err
 	}
@@ -66,16 +72,25 @@ func (s *AuthService) Login(email string, password string, userIP string, config
 	return token, refreshToken, expiresAt, nil
 }
 
-func (s *AuthService) DeleteUserRefreshTokensIfMore(user *models.UserModel, count uint) error {
+func (s *AuthService) DeleteUserRefreshTokensIfMoreByEmail(email string, count uint) error {
+	user, err := s.UserRepository.FindSingleByEmail(email)
+	if err != nil {
+		return errors.NewAuthError()
+	}
+
+	return s.DeleteUserRefreshTokensIfMore(user.ID, count)
+}
+
+func (s *AuthService) DeleteUserRefreshTokensIfMore(userID uint, count uint) error {
 	// Get user refresh tokens count
-	userRefreshTokenCount, err := s.JWTRefreshTokenRepository.CountOfTokensAtUser(user.ID)
+	userRefreshTokenCount, err := s.JWTRefreshTokenRepository.CountOfTokensAtUser(userID)
 	if err != nil {
 		return err
 	}
 
 	// Reset all user refresh tokens if more then COUNT
 	if userRefreshTokenCount >= count {
-		err := s.JWTRefreshTokenRepository.DeleteAllByUser(user.ID)
+		err := s.JWTRefreshTokenRepository.DeleteAllByUser(userID)
 		if err != nil {
 			return err
 		}
@@ -103,19 +118,19 @@ func (s *AuthService) RefreshToken(userID uint, userIP string, token string, con
 	}
 
 	// Reset all user refresh tokens if more then COUNT
-	err = s.DeleteUserRefreshTokensIfMore(user, 10)
+	err = s.DeleteUserRefreshTokensIfMore(user.ID, 10)
 	if err != nil {
 		return "", "", 0, err
 	}
 
 	// Create assess token
-	token, expiresAt, err := s.CreateJWTToken(user, userIP, config.Secret, config.ExpiresAt)
+	token, expiresAt, err := s.CreateJWTToken(user.ID, userIP, config.Secret, config.ExpiresAt)
 	if err != nil {
 		return "", "", 0, errors.NewAuthError()
 	}
 
 	// Create refresh token
-	refreshToken, _, err := s.CreateJWTToken(user, userIP, config.RefreshSecret, config.RefreshExpiresAt)
+	refreshToken, _, err := s.CreateJWTToken(user.ID, userIP, config.RefreshSecret, config.RefreshExpiresAt)
 	if err != nil {
 		return "", "", 0, errors.NewAuthError()
 	}
@@ -133,14 +148,14 @@ func (s *AuthService) RefreshToken(userID uint, userIP string, token string, con
 	return token, refreshToken, expiresAt, err
 }
 
-func (s *AuthService) CreateJWTToken(user *models.UserModel, ip string, secret string, expiresAt int64) (string, int64, error) {
+func (s *AuthService) CreateJWTToken(userID uint, userIP string, secret string, expiresAt int64) (string, int64, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
 	expiresAt = time.Now().Add(time.Duration(expiresAt) * time.Second).Unix()
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["user_id"] = user.ID
-	claims["user_ip"] = ip
+	claims["user_id"] = userID
+	claims["user_ip"] = userIP
 	claims["exp"] = expiresAt
 
 	t, err := token.SignedString([]byte(secret))
@@ -216,7 +231,7 @@ func (s *AuthService) ResetPassword(userID uint, password string, newPassword st
 		return err
 	}
 
-	err = s.DeleteUserRefreshTokensIfMore(user, 0)
+	err = s.DeleteUserRefreshTokensIfMore(user.ID, 0)
 	if err != nil {
 		return err
 	}

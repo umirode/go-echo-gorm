@@ -10,6 +10,12 @@ type RepositoryObjectGenerator struct {
 	Generator generator.IGenerator
 }
 
+func NewRepositoryObjectGenerator(gen generator.IGenerator) *RepositoryObjectGenerator {
+	return &RepositoryObjectGenerator{
+		Generator: gen,
+	}
+}
+
 func (g *RepositoryObjectGenerator) Generate(name string, args []string) error {
 	err := g.generateIRepository(name)
 	if err != nil {

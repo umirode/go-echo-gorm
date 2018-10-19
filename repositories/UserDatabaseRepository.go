@@ -76,6 +76,12 @@ func (r *UserDatabaseRepository) UpdateUser(user *models.UserModel) error {
 	return err
 }
 
+func (r *UserDatabaseRepository) DeleteUserByEmail(email string) error {
+	result := r.Database.Where("email = ?", email).Delete(models.UserModel{})
+
+	return result.Error
+}
+
 func (r *UserDatabaseRepository) DeleteUser(user *models.UserModel) error {
 	err := r.delete(user)
 

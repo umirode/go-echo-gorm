@@ -9,6 +9,12 @@ type MockUserRepository struct {
 	mock.Mock
 }
 
+func (r *MockUserRepository) DeleteUserByEmail(email string) error {
+	args := r.Called(email)
+
+	return args.Error(0)
+}
+
 func (r *MockUserRepository) FindSingleByEmailAndPassword(email string, password string) (*models.UserModel, error) {
 	args := r.Called(email, password)
 

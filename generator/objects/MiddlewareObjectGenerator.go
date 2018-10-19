@@ -10,6 +10,12 @@ type MiddlewareObjectGenerator struct {
 	Generator generator.IGenerator
 }
 
+func NewMiddlewareObjectGenerator(gen generator.IGenerator) *MiddlewareObjectGenerator {
+	return &MiddlewareObjectGenerator{
+		Generator: gen,
+	}
+}
+
 func (g *MiddlewareObjectGenerator) Generate(name string, args []string) error {
 	err := g.generateMiddleware(name)
 

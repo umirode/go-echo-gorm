@@ -8,6 +8,43 @@ import (
 	"testing"
 )
 
+func TestAuthService_DeleteUserByEmail(t *testing.T) {
+	userRepository := &repositories.MockUserRepository{}
+
+	userRepository.On("DeleteUserByEmail", mock.AnythingOfType("string")).Return(nil)
+
+	jwtRefreshTokenRepository := &repositories.MockJWTRefreshTokenRepository{}
+
+	s := &AuthService{
+		UserRepository:            userRepository,
+		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
+	}
+
+	err := s.DeleteUserByEmail("test")
+
+	assert.NoError(t, err)
+}
+
+func TestAuthService_DeleteUserRefreshTokensIfMoreByEmail(t *testing.T) {
+	userRepository := &repositories.MockUserRepository{}
+
+	userRepository.On("FindSingleByEmail", mock.AnythingOfType("string")).Return(&models.UserModel{}, nil)
+
+	jwtRefreshTokenRepository := &repositories.MockJWTRefreshTokenRepository{}
+
+	jwtRefreshTokenRepository.On("CountOfTokensAtUser", mock.AnythingOfType("uint")).Return(10, nil)
+	jwtRefreshTokenRepository.On("DeleteAllByUser", mock.AnythingOfType("uint")).Return(nil)
+
+	s := &AuthService{
+		UserRepository:            userRepository,
+		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
+	}
+
+	err := s.DeleteUserRefreshTokensIfMoreByEmail("test", 1)
+
+	assert.NoError(t, err)
+}
+
 func TestAuthService_GetPasswordHash(t *testing.T) {
 	userRepository := &repositories.MockUserRepository{}
 	jwtRefreshTokenRepository := &repositories.MockJWTRefreshTokenRepository{}
@@ -32,7 +69,7 @@ func TestAuthService_CreateJWTToken(t *testing.T) {
 		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
 	}
 
-	token, expiresAt, err := s.CreateJWTToken(&models.UserModel{}, "test", "test", 1000)
+	token, expiresAt, err := s.CreateJWTToken(1, "test", "test", 1000)
 
 	assert.NotEmpty(t, token)
 	assert.NotEmpty(t, expiresAt)
@@ -51,7 +88,7 @@ func TestAuthService_DeleteUserRefreshTokensIfMore(t *testing.T) {
 		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
 	}
 
-	err := s.DeleteUserRefreshTokensIfMore(&models.UserModel{}, 1)
+	err := s.DeleteUserRefreshTokensIfMore(1, 1)
 
 	assert.NoError(t, err)
 }

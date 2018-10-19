@@ -10,6 +10,12 @@ type ModelObjectGenerator struct {
 	Generator generator.IGenerator
 }
 
+func NewModelObjectGenerator(gen generator.IGenerator) *ModelObjectGenerator {
+	return &ModelObjectGenerator{
+		Generator: gen,
+	}
+}
+
 func (g *ModelObjectGenerator) Generate(name string, args []string) error {
 	err := g.generateModel(name)
 

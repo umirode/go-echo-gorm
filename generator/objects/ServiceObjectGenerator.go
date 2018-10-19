@@ -10,6 +10,12 @@ type ServiceObjectGenerator struct {
 	Generator generator.IGenerator
 }
 
+func NewServiceObjectGenerator(gen generator.IGenerator) *ServiceObjectGenerator {
+	return &ServiceObjectGenerator{
+		Generator: gen,
+	}
+}
+
 func (g *ServiceObjectGenerator) Generate(name string, args []string) error {
 	err := g.generateIService(name)
 	if err != nil {

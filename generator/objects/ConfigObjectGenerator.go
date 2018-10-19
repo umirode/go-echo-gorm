@@ -10,6 +10,12 @@ type ConfigObjectGenerator struct {
 	Generator generator.IGenerator
 }
 
+func NewConfigObjectGenerator(gen generator.IGenerator) *ConfigObjectGenerator {
+	return &ConfigObjectGenerator{
+		Generator: gen,
+	}
+}
+
 func (g *ConfigObjectGenerator) Generate(name string, args []string) error {
 	err := g.generateConfig(name)
 
