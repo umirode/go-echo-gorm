@@ -17,7 +17,7 @@ type AuthService struct {
 	JWTRefreshTokenRepository repositories.IJWTRefreshTokenRepository
 }
 
-func (s *AuthService) Login(email string, password string, ip string, config JWTConfig) (string, string, int64, error) {
+func (s *AuthService) Login(email string, password string, userIP string, config JWTConfig) (string, string, int64, error) {
 	// Get password hash
 	passwordHash, err := s.GetPasswordHash(password)
 	if err != nil {
@@ -31,18 +31,18 @@ func (s *AuthService) Login(email string, password string, ip string, config JWT
 	}
 
 	// Create assess token
-	token, expiresAt, err := s.CreateJWTToken(user, ip, config.Secret, config.ExpiresAt)
+	token, expiresAt, err := s.CreateJWTToken(user, userIP, config.Secret, config.ExpiresAt)
 	if err != nil {
 		return "", "", 0, err
 	}
 
 	// Create refresh token
-	refreshToken, _, err := s.CreateJWTToken(user, ip, config.RefreshSecret, config.RefreshExpiresAt)
+	refreshToken, _, err := s.CreateJWTToken(user, userIP, config.RefreshSecret, config.RefreshExpiresAt)
 	if err != nil {
 		return "", "", 0, err
 	}
 
-	err = s.JWTRefreshTokenRepository.DeleteAllByUserAndIP(user.ID, ip)
+	err = s.JWTRefreshTokenRepository.DeleteAllByUserAndIP(user.ID, userIP)
 	if err != nil {
 		return "", "", 0, err
 	}
@@ -55,7 +55,7 @@ func (s *AuthService) Login(email string, password string, ip string, config JWT
 
 	// Add new refresh token to database
 	err = s.JWTRefreshTokenRepository.AddToken(&models.JWTRefreshTokenModel{
-		UserIP: ip,
+		UserIP: userIP,
 		UserID: user.ID,
 		Token:  refreshToken,
 	})
@@ -84,12 +84,7 @@ func (s *AuthService) DeleteUserRefreshTokensIfMore(user *models.UserModel, coun
 	return nil
 }
 
-func (s *AuthService) RefreshToken(jwtToken *jwt.Token, config JWTConfig) (string, string, int64, error) {
-	// Get user_id from JWT refresh token
-	claims := jwtToken.Claims.(jwt.MapClaims)
-	userID := uint(claims["user_id"].(float64))
-	userIP := claims["user_ip"].(string)
-
+func (s *AuthService) RefreshToken(userID uint, userIP string, token string, config JWTConfig) (string, string, int64, error) {
 	// Find user in database
 	user, err := s.UserRepository.FindSingleByID(userID)
 	if err != nil {
@@ -97,7 +92,7 @@ func (s *AuthService) RefreshToken(jwtToken *jwt.Token, config JWTConfig) (strin
 	}
 
 	// Check if user has current refresh token in database
-	userHasToken, err := s.JWTRefreshTokenRepository.IsUserHasToken(user.ID, jwtToken.Raw)
+	userHasToken, err := s.JWTRefreshTokenRepository.IsUserHasToken(user.ID, token)
 	if err != nil || !userHasToken {
 		return "", "", 0, errors.NewAuthError()
 	}
@@ -184,11 +179,7 @@ func (s *AuthService) Signup(email string, password string) error {
 	return err
 }
 
-func (s *AuthService) Logout(jwtToken *jwt.Token) error {
-	claims := jwtToken.Claims.(jwt.MapClaims)
-	userID := uint(claims["user_id"].(float64))
-	userIP := claims["user_ip"].(string)
-
+func (s *AuthService) Logout(userID uint, userIP string) error {
 	user, err := s.UserRepository.FindSingleByID(userID)
 	if err != nil {
 		return errors.NewAuthError()
@@ -197,11 +188,7 @@ func (s *AuthService) Logout(jwtToken *jwt.Token) error {
 	return s.JWTRefreshTokenRepository.DeleteAllByUserAndIP(user.ID, userIP)
 }
 
-func (s *AuthService) ResetPassword(jwtToken *jwt.Token, password string, newPassword string) error {
-	// Get user_id from JWT refresh token
-	claims := jwtToken.Claims.(jwt.MapClaims)
-	userID := uint(claims["user_id"].(float64))
-
+func (s *AuthService) ResetPassword(userID uint, password string, newPassword string) error {
 	// Find user in database
 	user, err := s.UserRepository.FindSingleByID(userID)
 	if err != nil {

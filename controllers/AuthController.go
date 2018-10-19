@@ -86,8 +86,11 @@ func (c *AuthController) Signup(context echo.Context) error {
 
 func (c *AuthController) RefreshToken(context echo.Context) error {
 	token := context.Get("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	userID := uint(claims["user_id"].(float64))
+	userIP := claims["user_ip"].(string)
 
-	assessToken, refreshToken, expiresAt, err := c.AuthService.RefreshToken(token, services.JWTConfig{
+	assessToken, refreshToken, expiresAt, err := c.AuthService.RefreshToken(userID, userIP, token.Raw, services.JWTConfig{
 		ExpiresAt:        c.JWT.ExpiresAt,
 		Secret:           c.JWT.Secret,
 		RefreshExpiresAt: c.JWT.RefreshExpiresAt,
@@ -110,7 +113,11 @@ func (c *AuthController) RefreshToken(context echo.Context) error {
 
 func (c *AuthController) Logout(context echo.Context) error {
 	token := context.Get("user").(*jwt.Token)
-	err := c.AuthService.Logout(token)
+	claims := token.Claims.(jwt.MapClaims)
+	userID := uint(claims["user_id"].(float64))
+	userIP := claims["user_ip"].(string)
+
+	err := c.AuthService.Logout(userID, userIP)
 	if err != nil {
 		return err
 	}
@@ -134,9 +141,11 @@ func (c *AuthController) ResetPassword(context echo.Context) error {
 	}
 
 	token := context.Get("user").(*jwt.Token)
+	claims := token.Claims.(jwt.MapClaims)
+	userID := uint(claims["user_id"].(float64))
 
 	err := c.AuthService.ResetPassword(
-		token,
+		userID,
 		resetPasswordData.Password,
 		resetPasswordData.NewPassword,
 	)

@@ -1,7 +1,6 @@
 package services
 
 import (
-	"github.com/dgrijalva/jwt-go"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/umirode/go-rest/models"
@@ -96,12 +95,7 @@ func TestAuthService_Logout(t *testing.T) {
 		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
 	}
 
-	err := s.Logout(&jwt.Token{
-		Claims: jwt.MapClaims{
-			"user_id": float64(1),
-			"user_ip": "test",
-		},
-	})
+	err := s.Logout(1, "test")
 
 	assert.NoError(t, err)
 }
@@ -124,12 +118,7 @@ func TestAuthService_RefreshToken(t *testing.T) {
 		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
 	}
 
-	assessToken, refreshToken, expiresAt, err := s.RefreshToken(&jwt.Token{
-		Claims: jwt.MapClaims{
-			"user_id": float64(1),
-			"user_ip": "test",
-		},
-	}, JWTConfig{})
+	assessToken, refreshToken, expiresAt, err := s.RefreshToken(1, "test", "test", JWTConfig{})
 
 	assert.NotEmpty(t, assessToken)
 	assert.NotEmpty(t, refreshToken)
@@ -154,12 +143,7 @@ func TestAuthService_ResetPassword(t *testing.T) {
 		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
 	}
 
-	err := s.ResetPassword(&jwt.Token{
-		Claims: jwt.MapClaims{
-			"user_id": float64(1),
-			"user_ip": "test",
-		},
-	}, "test", "test")
+	err := s.ResetPassword(1, "test", "test")
 
 	assert.NoError(t, err)
 }
