@@ -32,7 +32,7 @@ func (s *AuthServiceMock) Logout(userID uint, userIP string) error {
 	panic("implement me")
 }
 
-func (s *AuthServiceMock) ResetPassword(userID uint, password string, newPassword string) error {
+func (s *AuthServiceMock) ChangePassword(userID uint, password string, newPassword string) error {
 	panic("implement me")
 }
 

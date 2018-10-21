@@ -20,5 +20,5 @@ type IAuthService interface {
 	GetPasswordHash(password string) (string, error)
 	Signup(email string, password string) error
 	Logout(userID uint, userIP string) error
-	ResetPassword(userID uint, password string, newPassword string) error
+	ChangePassword(userID uint, password string, newPassword string) error
 }

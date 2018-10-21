@@ -20,7 +20,7 @@ func (m *JWTMiddleware) Middleware(next echo.HandlerFunc) echo.HandlerFunc {
 	return middleware.JWTWithConfig(middleware.JWTConfig{
 		SigningKey: []byte(m.Secret),
 		ErrorHandler: func(e error) error {
-			return errors.NewAuthError()
+			return errors.NewInvalidTokenError()
 		},
 		TokenLookup: "header:" + echo.HeaderAuthorization,
 		AuthScheme:  "Bearer",

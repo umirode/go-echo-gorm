@@ -40,5 +40,5 @@ func (r *Router) setAuthRoutes() {
 	protectedAuthGroup.Use(middlewares.NewJWTMiddleware(config.Secret).Middleware)
 
 	protectedAuthGroup.POST("/logout", authController.Logout)
-	protectedAuthGroup.POST("/reset-password", authController.ResetPassword)
+	protectedAuthGroup.POST("/change-password", authController.ChangePassword)
 }

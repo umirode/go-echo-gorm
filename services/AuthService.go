@@ -203,7 +203,7 @@ func (s *AuthService) Logout(userID uint, userIP string) error {
 	return s.JWTRefreshTokenRepository.DeleteAllByUserAndIP(user.ID, userIP)
 }
 
-func (s *AuthService) ResetPassword(userID uint, password string, newPassword string) error {
+func (s *AuthService) ChangePassword(userID uint, password string, newPassword string) error {
 	// Find user in database
 	user, err := s.UserRepository.FindSingleByID(userID)
 	if err != nil {

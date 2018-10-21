@@ -28,7 +28,7 @@ type AuthController struct {
 func (c *AuthController) Login(context echo.Context) error {
 	loginData := new(struct {
 		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required"`
+		Password string `json:"password" validate:"required,min=8"`
 	})
 
 	if err := context.Bind(loginData); err != nil {
@@ -39,7 +39,7 @@ func (c *AuthController) Login(context echo.Context) error {
 		return err
 	}
 
-	token, refreshToken, expiresAt, err := c.AuthService.Login(loginData.Email, loginData.Password, context.RealIP(), services.JWTConfig{
+	assessToken, refreshToken, expiresAt, err := c.AuthService.Login(loginData.Email, loginData.Password, context.RealIP(), services.JWTConfig{
 		ExpiresAt:        c.JWT.ExpiresAt,
 		Secret:           c.JWT.Secret,
 		RefreshExpiresAt: c.JWT.RefreshExpiresAt,
@@ -50,11 +50,11 @@ func (c *AuthController) Login(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, struct {
-		Token        string `json:"token"`
+		AssessToken  string `json:"assess_token"`
 		RefreshToken string `json:"refresh_token"`
 		ExpiresAt    int64  `json:"expires_at"`
 	}{
-		Token:        token,
+		AssessToken:  assessToken,
 		RefreshToken: refreshToken,
 		ExpiresAt:    expiresAt,
 	})
@@ -63,8 +63,8 @@ func (c *AuthController) Login(context echo.Context) error {
 func (c *AuthController) Signup(context echo.Context) error {
 	signupData := new(struct {
 		Email                string `json:"email" validate:"required,email"`
-		Password             string `json:"password" validate:"required,eqfield=PasswordConfirmation"`
-		PasswordConfirmation string `json:"password_confirmation" validate:"required"`
+		Password             string `json:"password" validate:"required,min=8"`
+		PasswordConfirmation string `json:"password_confirmation" validate:"required,eqfield=Password,min=8"`
 	})
 
 	if err := context.Bind(signupData); err != nil {
@@ -101,11 +101,11 @@ func (c *AuthController) RefreshToken(context echo.Context) error {
 	}
 
 	return context.JSON(http.StatusOK, struct {
-		Token        string `json:"token"`
+		AssessToken  string `json:"assess_token"`
 		RefreshToken string `json:"refresh_token"`
 		ExpiresAt    int64  `json:"expires_at"`
 	}{
-		Token:        assessToken,
+		AssessToken:  assessToken,
 		RefreshToken: refreshToken,
 		ExpiresAt:    expiresAt,
 	})
@@ -125,11 +125,11 @@ func (c *AuthController) Logout(context echo.Context) error {
 	return context.JSON(http.StatusOK, nil)
 }
 
-func (c *AuthController) ResetPassword(context echo.Context) error {
+func (c *AuthController) ChangePassword(context echo.Context) error {
 	resetPasswordData := new(struct {
 		Password                string `json:"password" validate:"required"`
-		NewPassword             string `json:"new_password" validate:"required,eqfield=NewPasswordConfirmation"`
-		NewPasswordConfirmation string `json:"new_password_confirmation" validate:"required"`
+		NewPassword             string `json:"new_password" validate:"required,min=8"`
+		NewPasswordConfirmation string `json:"new_password_confirmation" validate:"required,eqfield=NewPassword,min=8"`
 	})
 
 	if err := context.Bind(resetPasswordData); err != nil {
@@ -144,7 +144,7 @@ func (c *AuthController) ResetPassword(context echo.Context) error {
 	claims := token.Claims.(jwt.MapClaims)
 	userID := uint(claims["user_id"].(float64))
 
-	err := c.AuthService.ResetPassword(
+	err := c.AuthService.ChangePassword(
 		userID,
 		resetPasswordData.Password,
 		resetPasswordData.NewPassword,

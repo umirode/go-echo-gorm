@@ -1,5 +1,9 @@
 package models
 
+import (
+    "time"
+)
+
 type {{ .Name | ToCamel }}Model struct {
     ID        uint       `gorm:"primary_key" json:"id"`
     CreatedAt time.Time  `json:"created_at"`
