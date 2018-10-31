@@ -180,7 +180,7 @@ func TestAuthService_ResetPassword(t *testing.T) {
 		JWTRefreshTokenRepository: jwtRefreshTokenRepository,
 	}
 
-	err := s.ResetPassword(1, "test", "test")
+	err := s.ChangePassword(1, "test", "test")
 
 	assert.NoError(t, err)
 }
