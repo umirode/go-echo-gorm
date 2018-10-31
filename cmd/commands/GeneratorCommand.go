@@ -2,7 +2,6 @@ package commands
 
 import (
 	"github.com/Sirupsen/logrus"
-	"github.com/jinzhu/gorm"
 	"github.com/spf13/cobra"
 	"github.com/umirode/go-rest/generator/generator"
 	"github.com/umirode/go-rest/generator/objects"
@@ -14,10 +13,6 @@ type GeneratorCommand struct {
 
 func NewGeneratorCommand() *GeneratorCommand {
 	return &GeneratorCommand{}
-}
-
-func (c *GeneratorCommand) WithDatabase(db *gorm.DB) ICommand {
-	return c
 }
 
 func (c *GeneratorCommand) GetCommand() *cobra.Command {

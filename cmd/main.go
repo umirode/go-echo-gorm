@@ -45,7 +45,7 @@ func main() {
 	*/
 	database.RunMigrations(db)
 
-	rootCmd := &cobra.Command{Use: "app"}
+	rootCmd := &cobra.Command{Use: "cmd"}
 
 	c := getCommands(db)
 	for _, command := range c {
@@ -60,6 +60,6 @@ func main() {
 func getCommands(db *gorm.DB) []commands.ICommand {
 	return []commands.ICommand{
 		commands.NewGeneratorCommand(),
-		commands.NewAuthCommand().WithDatabase(db),
+		commands.NewAuthCommand(db),
 	}
 }

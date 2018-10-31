@@ -14,14 +14,10 @@ type AuthCommand struct {
 	AuthService services.IAuthService
 }
 
-func NewAuthCommand() *AuthCommand {
-	return &AuthCommand{}
-}
-
-func (c *AuthCommand) WithDatabase(db *gorm.DB) ICommand {
-	c.Database = db
-
-	return c
+func NewAuthCommand(db *gorm.DB) *AuthCommand {
+	return &AuthCommand{
+		Database: db,
+	}
 }
 
 func (c *AuthCommand) GetCommand() *cobra.Command {

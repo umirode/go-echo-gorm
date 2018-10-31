@@ -3,7 +3,8 @@ Golang REST framework
 
 ## Directory structure
 
-      config/             contains application configurations
+      cmd/                contains cli commands
+      configs/            contains configurations
       controllers/        contains Web controllers
       database/           contains database package and migrations
       errors/             contains errors and HTTP errors handler
@@ -35,20 +36,28 @@ Start the container: `docker-compose up -d`
 
 You can then access the application through the following URL: http://127.0.0.1:8080
 
-## Generator
+## Cli
 
-For **Windows** use `gen.bat`
+For **Windows** use `cmd.bat`
 
-For **Linux** use `gen.sh`
+For **Linux** use `cmd.sh`
 
----
+## Cli Boilerplate code generator
 
-Model generation: `gen.sh -t model -name Order`
+Model generation: `cmd.bat generator model Order`
 
-Config generation: `gen.sh -t config -name Cart`
+Config generation: `cmd.bat generator config Cart`
 
-Repository generation: `gen.sh -t repository -name Product`
+Repository generation: `cmd.bat generator repository Product`
 
-Service generation: `gen.sh -t service -name Product`
+Service generation: `cmd.bat generator service Product`
 
-Middleware generation: `gen.sh -t middleware -name Product`
+Middleware generation: `cmd.bat generator middleware Product`
+
+## Cli Auth
+
+Create user: `cmd.bat auth create test@mail.com StrongPassword`
+
+Delete user: `cmd.bat auth delete test@mail.com`
+
+Delete user refresh tokens: `cmd.bat auth delete-tokens test@mail.com`
