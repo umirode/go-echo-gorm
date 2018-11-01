@@ -12,19 +12,19 @@ type {{ .Name | ToCamel }}Service struct {
 }
 
 func (s *{{ .Name | ToCamel }}Service) Get{{ .Name | ToCamel }}ByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
-    {{ .Name | ToLowerCamel }} := s.Repository.FindSingleByID(id)
+    {{ .Name | ToLowerCamel }}, err := s.Repository.FindSingleByID(id)
 
     if {{ .Name | ToLowerCamel }}.ID == 0 {
-        return nil
+        return nil, err
     }
 
-    return {{ .Name | ToLowerCamel }}
+    return {{ .Name | ToLowerCamel }}, nil
 }
 
 func (s *{{ .Name | ToCamel }}Service) GetAll{{ .Name | ToCamel | Plural }}() (*[]models.{{ .Name | ToCamel }}Model, error) {
     {{ .Name | ToLowerCamel | Plural}} := s.Repository.FindAll()
 
-    return {{ .Name | ToLowerCamel | Plural}}
+    return {{ .Name | ToLowerCamel | Plural}}, nil
 }
 
 func (s *{{ .Name | ToCamel }}Service) Create{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
@@ -36,7 +36,7 @@ func (s *{{ .Name | ToCamel }}Service) Create{{ .Name | ToCamel }}({{ .Name | To
 func (s *{{ .Name | ToCamel }}Service) Update{{ .Name | ToCamel }}(id uint, {{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
     {{ .Name | ToLowerCamel }}.ID = id
 
-    err := s.Repository.Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }})
+    err := s.Repository.Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }}, map[string]interface{}{})
 
     return err
 }

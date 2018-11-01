@@ -44,10 +44,8 @@ func (r *{{ .Name | ToCamel }}DatabaseRepository) Add{{ .Name | ToCamel }}({{ .N
     return err
 }
 
-func (r *{{ .Name | ToCamel }}DatabaseRepository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
-    err := r.update({{ .Name | ToLowerCamel }}, map[string]interface{}{
-        "FIELD": "TEST",
-    })
+func (r *{{ .Name | ToCamel }}DatabaseRepository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model, data map[string]interface{}) error {
+    err := r.update({{ .Name | ToLowerCamel }}, data)
 
     return err
 }

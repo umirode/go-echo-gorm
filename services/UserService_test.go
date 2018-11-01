@@ -66,7 +66,7 @@ func TestUserService_GetUserByID(t *testing.T) {
 
 func TestUserService_UpdateUser(t *testing.T) {
 	userRepository := &repositories.MockUserRepository{}
-	userRepository.On("UpdateUser", &models.UserModel{}).Return(nil)
+	userRepository.On("UpdateUser", &models.UserModel{}, mock.Anything).Return(nil)
 
 	s := &UserService{
 		UserRepository: userRepository,

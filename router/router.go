@@ -5,6 +5,7 @@ import (
 	"github.com/labstack/echo"
 	"github.com/umirode/go-rest/errors"
 	"github.com/umirode/go-rest/middlewares"
+	"github.com/umirode/go-rest/validator"
 )
 
 type Router struct {
@@ -19,7 +20,7 @@ func NewRouter(database *gorm.DB, debug bool) *Router {
 		Database: database,
 		Debug:    debug,
 	}
-	router.Router.Validator = structValidator{}
+	router.Router.Validator = validator.NewOnlyStructValidator()
 
 	router.init()
 
@@ -37,4 +38,5 @@ func (r *Router) init() {
 
 	r.setUserRoutes()
 	r.setAuthRoutes()
+	r.setBirthdayRoutes()
 }

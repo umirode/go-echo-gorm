@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
 	"github.com/umirode/go-rest/errors"
 	"github.com/umirode/go-rest/services"
@@ -13,16 +12,6 @@ type AuthController struct {
 	BaseController
 
 	AuthService services.IAuthService
-
-	JWT struct {
-		// Assess token
-		ExpiresAt int64 // time in seconds
-		Secret    string
-
-		// Refresh token
-		RefreshExpiresAt int64 // time in seconds
-		RefreshSecret    string
-	}
 }
 
 func (c *AuthController) Login(context echo.Context) error {
@@ -85,8 +74,14 @@ func (c *AuthController) Signup(context echo.Context) error {
 }
 
 func (c *AuthController) RefreshToken(context echo.Context) error {
-	token := context.Get("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
+	token, err := c.getToken(context)
+	if err != nil {
+		return err
+	}
+	claims, err := c.getTokenClaims(context)
+	if err != nil {
+		return err
+	}
 	userID := uint(claims["user_id"].(float64))
 	userIP := claims["user_ip"].(string)
 
@@ -112,12 +107,14 @@ func (c *AuthController) RefreshToken(context echo.Context) error {
 }
 
 func (c *AuthController) Logout(context echo.Context) error {
-	token := context.Get("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
+	claims, err := c.getTokenClaims(context)
+	if err != nil {
+		return err
+	}
 	userID := uint(claims["user_id"].(float64))
 	userIP := claims["user_ip"].(string)
 
-	err := c.AuthService.Logout(userID, userIP)
+	err = c.AuthService.Logout(userID, userIP)
 	if err != nil {
 		return err
 	}
@@ -140,11 +137,13 @@ func (c *AuthController) ChangePassword(context echo.Context) error {
 		return err
 	}
 
-	token := context.Get("user").(*jwt.Token)
-	claims := token.Claims.(jwt.MapClaims)
+	claims, err := c.getTokenClaims(context)
+	if err != nil {
+		return err
+	}
 	userID := uint(claims["user_id"].(float64))
 
-	err := c.AuthService.ChangePassword(
+	err = c.AuthService.ChangePassword(
 		userID,
 		resetPasswordData.Password,
 		resetPasswordData.NewPassword,

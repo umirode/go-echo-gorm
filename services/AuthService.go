@@ -226,7 +226,9 @@ func (s *AuthService) ChangePassword(userID uint, password string, newPassword s
 	}
 
 	user.Password = newPasswordHash
-	err = s.UserRepository.UpdateUser(user)
+	err = s.UserRepository.UpdateUser(user, map[string]interface{}{
+		"password": user.Password,
+	})
 	if err != nil {
 		return err
 	}

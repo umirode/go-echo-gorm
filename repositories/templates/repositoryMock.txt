@@ -12,13 +12,23 @@ type Mock{{ .Name | ToCamel }}Repository struct {
 func (r *Mock{{ .Name | ToCamel }}Repository) FindAll() *[]models.{{ .Name | ToCamel }}Model {
     args := r.Called()
 
-    return args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
+	{{ .Name | ToLowerCamel | Plural}}, ok := args.Get(0).(*[]models.{{ .Name | ToCamel }}Model)
+	if ok {
+		return {{ .Name | ToLowerCamel | Plural}}
+	}
+
+	return nil
 }
 
 func (r *Mock{{ .Name | ToCamel }}Repository) FindSingleByID(id uint) (*models.{{ .Name | ToCamel }}Model, error) {
     args := r.Called(id)
 
-    return args.Get(0).(*models.{{ .Name | ToCamel }}Model), args.Error(1)
+	{{ .Name | ToLowerCamel }}, ok := args.Get(0).(*models.{{ .Name | ToCamel }}Model)
+	if ok {
+		return {{ .Name | ToLowerCamel }}, nil
+	}
+
+	return nil, args.Error(1)
 }
 
 func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
@@ -27,8 +37,8 @@ func (r *Mock{{ .Name | ToCamel }}Repository) Add{{ .Name | ToCamel }}({{ .Name 
     return args.Error(0)
 }
 
-func (r *Mock{{ .Name | ToCamel }}Repository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model) error {
-    args := r.Called({{ .Name | ToLowerCamel }})
+func (r *Mock{{ .Name | ToCamel }}Repository) Update{{ .Name | ToCamel }}({{ .Name | ToLowerCamel }} *models.{{ .Name | ToCamel }}Model, data map[string]interface{}) error {
+    args := r.Called({{ .Name | ToLowerCamel }}, data)
 
     return args.Error(0)
 }

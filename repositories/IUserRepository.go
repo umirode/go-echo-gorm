@@ -6,7 +6,7 @@ import (
 
 type IUserRepository interface {
 	AddUser(user *models.UserModel) error
-	UpdateUser(user *models.UserModel) error
+	UpdateUser(user *models.UserModel, data map[string]interface{}) error
 	DeleteUser(user *models.UserModel) error
 	DeleteUserByEmail(email string) error
 

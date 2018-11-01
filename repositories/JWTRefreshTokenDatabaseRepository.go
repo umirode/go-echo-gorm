@@ -54,7 +54,7 @@ func (r *JWTRefreshTokenDatabaseRepository) DeleteAllByUser(userID uint) error {
 }
 
 func (r *JWTRefreshTokenDatabaseRepository) DeleteAllByUserAndIP(userID uint, userIP string) error {
-	result := r.Database.Where("user_id = ? AND user_ip", userID, userIP).Delete(&models.JWTRefreshTokenModel{})
+	result := r.Database.Where("user_id = ? AND user_ip = ?", userID, userIP).Delete(&models.JWTRefreshTokenModel{})
 	if result.Error != nil {
 		return result.Error
 	}

@@ -68,10 +68,8 @@ func (r *UserDatabaseRepository) AddUser(user *models.UserModel) error {
 	return err
 }
 
-func (r *UserDatabaseRepository) UpdateUser(user *models.UserModel) error {
-	err := r.update(user, map[string]interface{}{
-		"password": user.Password,
-	})
+func (r *UserDatabaseRepository) UpdateUser(user *models.UserModel, data map[string]interface{}) error {
+	err := r.update(user, data)
 
 	return err
 }

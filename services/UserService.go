@@ -32,7 +32,9 @@ func (s *UserService) CreateUser(user *models.UserModel) error {
 func (s *UserService) UpdateUser(id uint, user *models.UserModel) error {
 	user.ID = id
 
-	err := s.UserRepository.UpdateUser(user)
+	err := s.UserRepository.UpdateUser(user, map[string]interface{}{
+		"email": user.Email,
+	})
 
 	return err
 }

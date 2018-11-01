@@ -12,22 +12,16 @@ func (r *Router) setAuthRoutes() {
 	config := configs.GetJWTConfig()
 
 	authController := &controllers.AuthController{
-		JWT: struct {
-			ExpiresAt        int64
-			Secret           string
-			RefreshExpiresAt int64
-			RefreshSecret    string
-		}{
-			ExpiresAt:        config.ExpiresAt,
-			Secret:           config.Secret,
-			RefreshExpiresAt: config.RefreshExpiresAt,
-			RefreshSecret:    config.RefreshSecret,
-		},
 		AuthService: &services.AuthService{
 			UserRepository:            repositories.NewUserDatabaseRepository(r.Database),
 			JWTRefreshTokenRepository: repositories.NewJWTRefreshTokenDatabaseRepository(r.Database),
 		},
 	}
+
+	authController.JWT.ExpiresAt = config.ExpiresAt
+	authController.JWT.Secret = config.Secret
+	authController.JWT.RefreshExpiresAt = config.RefreshExpiresAt
+	authController.JWT.RefreshSecret = config.RefreshSecret
 
 	authGroup := r.Router.Group("/auth")
 

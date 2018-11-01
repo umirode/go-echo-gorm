@@ -9,5 +9,6 @@ func RunMigrations(db *gorm.DB) {
 	db.AutoMigrate(
 		&models.UserModel{},
 		&models.JWTRefreshTokenModel{},
+		&models.BirthdayModel{},
 	)
 }

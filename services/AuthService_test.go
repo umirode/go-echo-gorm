@@ -168,7 +168,7 @@ func TestAuthService_ResetPassword(t *testing.T) {
 
 	userRepository.On("FindSingleByID", mock.AnythingOfType("uint")).Return(&models.UserModel{}, nil)
 	userRepository.On("FindSingleByEmailAndPassword", mock.AnythingOfType("string"), mock.AnythingOfType("string")).Return(&models.UserModel{}, nil)
-	userRepository.On("UpdateUser", mock.Anything).Return(nil)
+	userRepository.On("UpdateUser", mock.Anything, mock.Anything).Return(nil)
 
 	jwtRefreshTokenRepository := &repositories.MockJWTRefreshTokenRepository{}
 

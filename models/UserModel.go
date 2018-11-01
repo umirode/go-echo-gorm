@@ -5,15 +5,15 @@ import (
 )
 
 type UserModel struct {
-	ID        uint       `gorm:"primary_key" json:"id"`
-	CreatedAt time.Time  `json:"created_at"`
-	UpdatedAt time.Time  `json:"updated_at"`
-	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
+	ID        uint      `gorm:"primary_key" json:"id"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 
 	Email    string `gorm:"not null;unique;size:255" json:"email"`
 	Password string `gorm:"not null;size:255" json:"-"`
 
 	JWTRefreshTokens []JWTRefreshTokenModel `gorm:"foreignkey:UserID"`
+	Birthdays        []BirthdayModel        `gorm:"foreignkey:UserID"`
 }
 
 func (m *UserModel) TableName() string {

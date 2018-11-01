@@ -65,8 +65,8 @@ func (r *MockUserRepository) AddUser(user *models.UserModel) error {
 	return args.Error(0)
 }
 
-func (r *MockUserRepository) UpdateUser(user *models.UserModel) error {
-	args := r.Called(user)
+func (r *MockUserRepository) UpdateUser(user *models.UserModel, data map[string]interface{}) error {
+	args := r.Called(user, data)
 
 	return args.Error(0)
 }

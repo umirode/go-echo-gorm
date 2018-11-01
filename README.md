@@ -44,6 +44,10 @@ For **Linux** use `cmd.sh`
 
 ## Cli Boilerplate code generator
 
+Templates file contains in `templates` folders.
+
+___
+
 Model generation: `cmd.bat generator model Order`
 
 Config generation: `cmd.bat generator config Cart`
