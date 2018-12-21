@@ -36,7 +36,7 @@ func (g *ServiceObjectGenerator) Generate(name string, args []string) error {
 }
 
 func (g *ServiceObjectGenerator) generateService(name string) error {
-	outputFilePath := fmt.Sprintf("services/%sService.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("services/%s/%sService.go", strcase.ToLowerCamel(name), strcase.ToCamel(name))
 
 	return g.Generator.Generate("services/templates/service.txt", outputFilePath, struct {
 		Name string
@@ -46,7 +46,7 @@ func (g *ServiceObjectGenerator) generateService(name string) error {
 }
 
 func (g *ServiceObjectGenerator) generateServiceMock(name string) error {
-	outputFilePath := fmt.Sprintf("services/%sServiceMock.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("services/%s/%sServiceMock.go", strcase.ToLowerCamel(name), strcase.ToCamel(name))
 
 	return g.Generator.Generate("services/templates/serviceMock.txt", outputFilePath, struct {
 		Name string
@@ -56,7 +56,7 @@ func (g *ServiceObjectGenerator) generateServiceMock(name string) error {
 }
 
 func (g *ServiceObjectGenerator) generateIService(name string) error {
-	outputFilePath := fmt.Sprintf("services/I%sService.go", strcase.ToCamel(name))
+	outputFilePath := fmt.Sprintf("services/%s/I%sService.go", strcase.ToLowerCamel(name), strcase.ToCamel(name))
 
 	return g.Generator.Generate("services/templates/iService.txt", outputFilePath, struct {
 		Name string

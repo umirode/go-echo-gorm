@@ -2,13 +2,12 @@ package database
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/umirode/go-rest/models"
+	"github.com/umirode/go-rest/src/Infrastructure/Persistence/Gorm/Model"
 )
 
 func RunMigrations(db *gorm.DB) {
 	db.AutoMigrate(
-		&models.UserModel{},
-		&models.JWTRefreshTokenModel{},
-		&models.BirthdayModel{},
+		&Model.User{},
+		&Model.Birthday{},
 	)
 }

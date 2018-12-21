@@ -51,9 +51,8 @@ func (c *AuthController) Login(context echo.Context) error {
 
 func (c *AuthController) Signup(context echo.Context) error {
 	signupData := new(struct {
-		Email                string `json:"email" validate:"required,email"`
-		Password             string `json:"password" validate:"required,min=8"`
-		PasswordConfirmation string `json:"password_confirmation" validate:"required,eqfield=Password,min=8"`
+		Email    string `json:"email" validate:"required,email"`
+		Password string `json:"password" validate:"required,min=8"`
 	})
 
 	if err := context.Bind(signupData); err != nil {
@@ -124,9 +123,8 @@ func (c *AuthController) Logout(context echo.Context) error {
 
 func (c *AuthController) ChangePassword(context echo.Context) error {
 	resetPasswordData := new(struct {
-		Password                string `json:"password" validate:"required"`
-		NewPassword             string `json:"new_password" validate:"required,min=8"`
-		NewPasswordConfirmation string `json:"new_password_confirmation" validate:"required,eqfield=NewPassword,min=8"`
+		Password    string `json:"password" validate:"required"`
+		NewPassword string `json:"new_password" validate:"required,min=8"`
 	})
 
 	if err := context.Bind(resetPasswordData); err != nil {

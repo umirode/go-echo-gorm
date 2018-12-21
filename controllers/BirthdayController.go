@@ -1,7 +1,6 @@
 package controllers
 
 import (
-	"fmt"
 	"github.com/labstack/echo"
 	"github.com/umirode/go-rest/errors"
 	"github.com/umirode/go-rest/models"
@@ -77,7 +76,6 @@ func (c *BirthdayController) UpdateBirthdayByUser(context echo.Context) error {
 		return err
 	}
 
-	fmt.Println("TESTTEST")
 	claims, err := c.getTokenClaims(context)
 	if err != nil {
 		return err
