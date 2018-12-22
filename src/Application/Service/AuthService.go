@@ -22,7 +22,7 @@ func NewAuthService(userRepository Repository.IUserRepository) *AuthService {
 	}
 }
 
-func (s *AuthService) Login(authDTO DTO.AuthDTO) (*Entity.User, error) {
+func (s *AuthService) Login(authDTO *DTO.AuthDTO) (*Entity.User, error) {
 	user, err := s.userRepository.FindOneByEmailAndPassword(authDTO.Email, s.getPasswordHash(authDTO.Password))
 	if err != nil {
 		return nil, err
@@ -35,7 +35,7 @@ func (s *AuthService) Login(authDTO DTO.AuthDTO) (*Entity.User, error) {
 	return user, nil
 }
 
-func (s *AuthService) Signup(authDTO DTO.AuthDTO) error {
+func (s *AuthService) Signup(authDTO *DTO.AuthDTO) error {
 	user, err := s.userRepository.FindOneByEmail(authDTO.Email)
 	if err != nil {
 		return err
@@ -59,19 +59,10 @@ func (s *AuthService) Signup(authDTO DTO.AuthDTO) error {
 	return nil
 }
 
-func (s *AuthService) ChangePassword(authDTO DTO.AuthDTO) error {
-	user, err := s.userRepository.FindOneByEmailAndPassword(authDTO.Email, s.getPasswordHash(authDTO.Password))
-	if err != nil {
-		return err
-	}
-
-	if user == nil {
-		return Error.NewInvalidError()
-	}
-
+func (s *AuthService) ChangePassword(user *Entity.User, authDTO *DTO.AuthDTO) error {
 	user.PasswordHash = s.getPasswordHash(authDTO.NewPassword)
 
-	err = s.userRepository.Save(user)
+	err := s.userRepository.Save(user)
 	if err != nil {
 		return err
 	}

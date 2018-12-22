@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
 	"github.com/Sirupsen/logrus"
+	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
+	"github.com/spf13/cobra"
+	"github.com/umirode/go-rest/Cli/commands"
 	"github.com/umirode/go-rest/Database"
-	"github.com/umirode/go-rest/Http/Router"
 	"github.com/umirode/go-rest/configs"
 )
 
@@ -44,14 +45,18 @@ func main() {
 	*/
 	Database.RunMigrations(db)
 
-	/**
-	Get server address
-	*/
-	serverConfig := configs.GetServerConfig()
-	serverAddress := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
+	rootCmd := &cobra.Command{Use: "cmd"}
 
-	/**
-	Start server
-	*/
-	logrus.Fatal(Router.NewRouter(db, serverConfig.Debug).Router.Start(serverAddress))
+	c := getCommands(db)
+	for _, command := range c {
+		rootCmd.AddCommand(
+			command.GetCommand(),
+		)
+	}
+
+	rootCmd.Execute()
+}
+
+func getCommands(db *gorm.DB) []commands.ICommand {
+	return []commands.ICommand{}
 }

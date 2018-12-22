@@ -7,9 +7,9 @@ import (
 )
 
 type IAuthService interface {
-	Login(authDTO DTO.AuthDTO) (*Entity.User, error)
-	Signup(authDTO DTO.AuthDTO) error
-	ChangePassword(authDTO DTO.AuthDTO) error
+	Login(authDTO *DTO.AuthDTO) (*Entity.User, error)
+	Signup(authDTO *DTO.AuthDTO) error
+	ChangePassword(user *Entity.User, authDTO *DTO.AuthDTO) error
 
 	GetJWTTokenForUser(user *Entity.User, tokenLifeTime int64, tokenSecret string) (*ValueObject.JWTToken, error)
 }

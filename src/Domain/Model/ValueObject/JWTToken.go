@@ -5,17 +5,17 @@ import (
 )
 
 type JWTToken struct {
-	token     string
-	expiresAt int64
+	Token     string
+	ExpiresAt int64
 }
 
 func (token *JWTToken) ToString() string {
-	return fmt.Sprintf("%s | %d", token.token, token.expiresAt)
+	return fmt.Sprintf("%s | %d", token.Token, token.ExpiresAt)
 }
 
 func NewJWTToken(token string, expiresAt int64) *JWTToken {
 	return &JWTToken{
-		token:     token,
-		expiresAt: expiresAt,
+		Token:     token,
+		ExpiresAt: expiresAt,
 	}
 }

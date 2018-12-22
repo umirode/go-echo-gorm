@@ -7,8 +7,9 @@ import (
 
 type IBirthdayService interface {
 	GetAllForUser(user *Entity.User) ([]*Entity.Birthday, error)
+	GetOneById(id uint) (*Entity.Birthday, error)
 
-	Create(birthdayDTO DTO.BirthdayDTO, user *Entity.User) error
-	Update(birthday *Entity.Birthday, birthdayDTO DTO.BirthdayDTO) error
-	Delete(birthday *Entity.Birthday) error
+	Create(birthdayDTO *DTO.BirthdayDTO, user *Entity.User) error
+	Update(birthday *Entity.Birthday, birthdayDTO *DTO.BirthdayDTO, user *Entity.User) error
+	Delete(birthday *Entity.Birthday, user *Entity.User) error
 }
