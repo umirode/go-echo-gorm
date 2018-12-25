@@ -5,7 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
-	"github.com/umirode/go-rest/Cli/commands"
+	"github.com/umirode/go-rest/Cli/Command"
 	"github.com/umirode/go-rest/Database"
 	"github.com/umirode/go-rest/configs"
 )
@@ -57,6 +57,6 @@ func main() {
 	rootCmd.Execute()
 }
 
-func getCommands(db *gorm.DB) []commands.ICommand {
-	return []commands.ICommand{}
+func getCommands(db *gorm.DB) []Command.ICommand {
+	return []Command.ICommand{}
 }

@@ -10,6 +10,17 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
 
+type Config struct {
+	Driver   string
+	Debug    bool
+	Username string
+	Password string
+	Host     string
+	Port     uint
+	Database string
+	Params   string
+}
+
 func NewDatabase(config *Config) (*gorm.DB, error) {
 	dsn := NewDsnGenerator(config).GetDSN()
 
