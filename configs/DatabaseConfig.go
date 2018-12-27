@@ -1,8 +1,7 @@
 package configs
 
 import (
-	"os"
-	"strconv"
+	"github.com/umirode/go-rest/Env"
 	"sync"
 )
 
@@ -22,18 +21,15 @@ var databaseConfig *DatabaseConfig
 
 func GetDatabaseConfig() *DatabaseConfig {
 	databaseConfigOnce.Do(func() {
-		port, _ := strconv.Atoi(os.Getenv("DATABASE_PORT"))
-		debug, _ := strconv.ParseBool(os.Getenv("DATABASE_DEBUG"))
-
 		databaseConfig = &DatabaseConfig{
-			Driver:   os.Getenv("DATABASE_DRIVER"),
-			Debug:    debug,
-			Username: os.Getenv("DATABASE_USER"),
-			Password: os.Getenv("DATABASE_PASSWORD"),
-			Host:     os.Getenv("DATABASE_HOST"),
-			Port:     uint(port),
-			Database: os.Getenv("DATABASE_NAME"),
-			Params:   os.Getenv("DATABASE_PARAMS"),
+			Driver:   Env.GetEnv("DATABASE_DRIVER", "string").(string),
+			Debug:    Env.GetEnv("DATABASE_DEBUG", "bool").(bool),
+			Username: Env.GetEnv("DATABASE_USER", "string").(string),
+			Password: Env.GetEnv("DATABASE_PASSWORD", "string").(string),
+			Host:     Env.GetEnv("DATABASE_HOST", "string").(string),
+			Port:     Env.GetEnv("DATABASE_PORT", "uint").(uint),
+			Database: Env.GetEnv("DATABASE_NAME", "string").(string),
+			Params:   Env.GetEnv("DATABASE_PARAMS", "string").(string),
 		}
 	})
 

@@ -1,7 +1,7 @@
 package configs
 
 import (
-	"os"
+	"github.com/umirode/go-rest/Env"
 	"sync"
 )
 
@@ -17,8 +17,8 @@ var jwtConfig *JWTConfig
 func GetJWTConfig() *JWTConfig {
 	jwtConfigOnce.Do(func() {
 		jwtConfig = &JWTConfig{
-			ExpiresAt:/*60 * 10*/ 2, // 10 minutes
-			Secret:                  os.Getenv("JWT_TOKEN_SECRET"),
+			ExpiresAt: Env.GetEnv("JWT_TOKEN_EXPIRES_AT", "int64").(int64),
+			Secret:    Env.GetEnv("JWT_TOKEN_SECRET", "string").(string),
 		}
 	})
 

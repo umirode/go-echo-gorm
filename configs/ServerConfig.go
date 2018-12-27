@@ -1,8 +1,7 @@
 package configs
 
 import (
-	"os"
-	"strconv"
+	"github.com/umirode/go-rest/Env"
 	"sync"
 )
 
@@ -17,13 +16,10 @@ var serverConfig *ServerConfig
 
 func GetServerConfig() *ServerConfig {
 	serverConfigOnce.Do(func() {
-		port, _ := strconv.Atoi(os.Getenv("SERVER_PORT"))
-		debug, _ := strconv.ParseBool(os.Getenv("SERVER_DEBUG"))
-
 		serverConfig = &ServerConfig{
-			Host:  os.Getenv("SERVER_HOST"),
-			Port:  uint(port),
-			Debug: debug,
+			Host:  Env.GetEnv("SERVER_HOST", "string").(string),
+			Port:  Env.GetEnv("SERVER_PORT", "uint").(uint),
+			Debug: Env.GetEnv("SERVER_DEBUG", "bool").(bool),
 		}
 	})
 
