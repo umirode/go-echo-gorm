@@ -9,5 +9,5 @@ type IBirthdayRepository interface {
 	Delete(birthday *Entity.Birthday) error
 
 	FindAllByUser(user *Entity.User) ([]*Entity.Birthday, error)
-	FindOneById(id uint) (*Entity.Birthday, error)
+	FindOneByIdAndUser(id uint, user *Entity.User) (*Entity.Birthday, error)
 }

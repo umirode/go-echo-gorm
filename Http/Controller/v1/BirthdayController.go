@@ -1,7 +1,8 @@
-package Controller
+package v1
 
 import (
 	"github.com/labstack/echo"
+	"github.com/umirode/go-rest/Http/Controller"
 	"github.com/umirode/go-rest/Http/Error"
 	"github.com/umirode/go-rest/src/Application/Hydrator"
 	"github.com/umirode/go-rest/src/Common"
@@ -12,7 +13,7 @@ import (
 )
 
 type BirthdayController struct {
-	BaseController
+	Controller.BaseController
 
 	BirthdayService  Service.IBirthdayService
 	BirthdayHydrator Common.IHydrator
@@ -29,24 +30,45 @@ func NewBirthdayController(birthdayService Service.IBirthdayService, userService
 	return controller
 }
 
-func (c *BirthdayController) Index(context echo.Context) error {
-	user, err := c.getCurrentUser(context)
+func (c *BirthdayController) GetAll(context echo.Context) error {
+	user, err := c.GetCurrentUser(context)
 	if err != nil {
 		return err
 	}
 
-	birthdays, err := c.BirthdayService.GetAllForUser(user)
+	birthdays, err := c.BirthdayService.GetAllByUser(user)
 	if err != nil {
 		return err
 	}
 
 	birthdaysMapArray := make([]map[string]interface{}, 0)
-	for _, holiday := range birthdays {
-		holidayMap, _ := c.BirthdayHydrator.Extract(holiday)
-		birthdaysMapArray = append(birthdaysMapArray, holidayMap)
+	for _, birthday := range birthdays {
+		birthdayMap, _ := c.BirthdayHydrator.Extract(birthday)
+		birthdaysMapArray = append(birthdaysMapArray, birthdayMap)
 	}
 
 	return context.JSON(http.StatusOK, birthdaysMapArray)
+}
+
+func (c *BirthdayController) GetOne(context echo.Context) error {
+	birthdayID, err := c.GetParam(context, "birthday_id", "uint")
+	if err != nil {
+		return err
+	}
+
+	user, err := c.GetCurrentUser(context)
+	if err != nil {
+		return err
+	}
+
+	birthday, err := c.BirthdayService.GetOneByIdAndUser(birthdayID.(uint), user)
+	if err != nil {
+		return err
+	}
+
+	birthdayMap, _ := c.BirthdayHydrator.Extract(birthday)
+
+	return context.JSON(http.StatusOK, birthdayMap)
 }
 
 func (c *BirthdayController) Create(context echo.Context) error {
@@ -63,7 +85,7 @@ func (c *BirthdayController) Create(context echo.Context) error {
 		return err
 	}
 
-	user, err := c.getCurrentUser(context)
+	user, err := c.GetCurrentUser(context)
 	if err != nil {
 		return err
 	}
@@ -86,7 +108,7 @@ func (c *BirthdayController) Create(context echo.Context) error {
 }
 
 func (c *BirthdayController) Update(context echo.Context) error {
-	birthdayID, err := c.getParam(context, "birthday_id", "uint")
+	birthdayID, err := c.GetParam(context, "birthday_id", "uint")
 	if err != nil {
 		return err
 	}
@@ -104,12 +126,12 @@ func (c *BirthdayController) Update(context echo.Context) error {
 		return err
 	}
 
-	user, err := c.getCurrentUser(context)
+	user, err := c.GetCurrentUser(context)
 	if err != nil {
 		return err
 	}
 
-	birthday, err := c.BirthdayService.GetOneById(birthdayID.(uint))
+	birthday, err := c.BirthdayService.GetOneByIdAndUser(birthdayID.(uint), user)
 	if err != nil {
 		return err
 	}
@@ -132,17 +154,17 @@ func (c *BirthdayController) Update(context echo.Context) error {
 }
 
 func (c *BirthdayController) Delete(context echo.Context) error {
-	birthdayID, err := c.getParam(context, "birthday_id", "uint")
+	birthdayID, err := c.GetParam(context, "birthday_id", "uint")
 	if err != nil {
 		return err
 	}
 
-	user, err := c.getCurrentUser(context)
+	user, err := c.GetCurrentUser(context)
 	if err != nil {
 		return err
 	}
 
-	birthday, err := c.BirthdayService.GetOneById(birthdayID.(uint))
+	birthday, err := c.BirthdayService.GetOneByIdAndUser(birthdayID.(uint), user)
 	if err != nil {
 		return err
 	}

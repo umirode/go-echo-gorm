@@ -39,8 +39,7 @@ func (r *Router) init() {
 
 	r.Router.Use(Middleware.NewCorsMiddleware().Middleware)
 
-	r.setAuthRoutes()
-	r.setBirthdayRoutes()
+	r.setV1Routes()
 }
 
 type HTTPErrorHandler struct{}

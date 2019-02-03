@@ -6,8 +6,8 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"github.com/umirode/go-rest/Cli/Command"
+	"github.com/umirode/go-rest/Config"
 	"github.com/umirode/go-rest/Database"
-	"github.com/umirode/go-rest/configs"
 )
 
 func main() {
@@ -22,7 +22,7 @@ func main() {
 	/**
 	Create database connection
 	*/
-	databaseConfig := configs.GetDatabaseConfig()
+	databaseConfig := Config.GetDatabaseConfig()
 	db, err := Database.NewDatabase(
 		&Database.Config{
 			Driver:   databaseConfig.Driver,

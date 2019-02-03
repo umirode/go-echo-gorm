@@ -22,7 +22,7 @@ func TestAuthService_Login(t *testing.T) {
 	//service := NewAuthService(userRepository)
 }
 
-func TestAuthService_GetJWTTokenForUser(t *testing.T) {
+func TestAuthService_GetJWTForUser(t *testing.T) {
 	//userRepository := &Repository.UserRepositoryMock{}
 
 	//service := NewAuthService(userRepository)

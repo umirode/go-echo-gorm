@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"github.com/Sirupsen/logrus"
 	"github.com/joho/godotenv"
+	"github.com/umirode/go-rest/Config"
 	"github.com/umirode/go-rest/Database"
 	"github.com/umirode/go-rest/Http/Router"
-	"github.com/umirode/go-rest/configs"
 )
 
 func main() {
@@ -21,7 +21,7 @@ func main() {
 	/**
 	Create database connection
 	*/
-	databaseConfig := configs.GetDatabaseConfig()
+	databaseConfig := Config.GetDatabaseConfig()
 	db, err := Database.NewDatabase(
 		&Database.Config{
 			Driver:   databaseConfig.Driver,
@@ -47,7 +47,7 @@ func main() {
 	/**
 	Get server address
 	*/
-	serverConfig := configs.GetServerConfig()
+	serverConfig := Config.GetServerConfig()
 	serverAddress := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
 
 	/**

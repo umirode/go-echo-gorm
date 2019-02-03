@@ -1,4 +1,4 @@
-package Env
+package Config
 
 import (
 	"os"

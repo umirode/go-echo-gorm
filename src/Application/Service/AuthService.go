@@ -13,26 +13,104 @@ import (
 )
 
 type AuthService struct {
-	userRepository Repository.IUserRepository
+	userRepository         Repository.IUserRepository
+	refreshTokenRepository Repository.IRefreshTokenRepository
+
+	accessTokenSecret    string
+	accessTokenLifeTime  int64
+	refreshTokenSecret   string
+	refreshTokenLifeTime int64
 }
 
-func NewAuthService(userRepository Repository.IUserRepository) *AuthService {
+func NewAuthService(userRepository Repository.IUserRepository, refreshTokenRepository Repository.IRefreshTokenRepository, accessTokenSecret string, accessTokenLifeTime int64, refreshTokenSecret string, refreshTokenLifeTime int64) *AuthService {
 	return &AuthService{
-		userRepository: userRepository,
+		userRepository:         userRepository,
+		refreshTokenRepository: refreshTokenRepository,
+
+		accessTokenSecret:    accessTokenSecret,
+		accessTokenLifeTime:  accessTokenLifeTime,
+		refreshTokenSecret:   refreshTokenSecret,
+		refreshTokenLifeTime: refreshTokenLifeTime,
 	}
 }
 
-func (s *AuthService) Login(authDTO *DTO.AuthDTO) (*Entity.User, error) {
+func (s *AuthService) Login(authDTO *DTO.AuthDTO) (*ValueObject.JWT, *ValueObject.JWT, error) {
 	user, err := s.userRepository.FindOneByEmailAndPassword(authDTO.Email, s.getPasswordHash(authDTO.Password))
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	if user == nil {
-		return nil, Error.NewInvalidError()
+		return nil, nil, Error.NewInvalidError()
 	}
 
-	return user, nil
+	s.refreshTokenRepository.DeleteOldTokensByUser(user)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	accessToken, err := s.createToken(s.accessTokenSecret, s.accessTokenLifeTime, user.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	refreshToken, err := s.createToken(s.refreshTokenSecret, s.refreshTokenLifeTime, user.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	err = s.refreshTokenRepository.Save(&Entity.RefreshToken{
+		Token:     refreshToken.Token,
+		OwnerID:   user.ID,
+		ExpiresAt: refreshToken.ExpiresAt,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return accessToken, refreshToken, nil
+}
+
+func (s *AuthService) RefreshJWT(user *Entity.User, token string) (*ValueObject.JWT, *ValueObject.JWT, error) {
+	oldRefreshToken, err := s.refreshTokenRepository.FindOneByTokenAndUser(token, user)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if oldRefreshToken == nil {
+		return nil, nil, Error.NewInvalidError()
+	}
+
+	err = s.refreshTokenRepository.Delete(oldRefreshToken)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	s.refreshTokenRepository.DeleteOldTokensByUser(user)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	accessToken, err := s.createToken(s.accessTokenSecret, s.accessTokenLifeTime, user.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	refreshToken, err := s.createToken(s.refreshTokenSecret, s.refreshTokenLifeTime, user.ID)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	err = s.refreshTokenRepository.Save(&Entity.RefreshToken{
+		Token:     refreshToken.Token,
+		ExpiresAt: refreshToken.ExpiresAt,
+		OwnerID:   user.ID,
+	})
+	if err != nil {
+		return nil, nil, err
+	}
+
+	return accessToken, refreshToken, nil
 }
 
 func (s *AuthService) Signup(authDTO *DTO.AuthDTO) error {
@@ -48,7 +126,6 @@ func (s *AuthService) Signup(authDTO *DTO.AuthDTO) error {
 	user = &Entity.User{
 		Email:        authDTO.Email,
 		PasswordHash: s.getPasswordHash(authDTO.Password),
-		Birthdays:    *new([]*Entity.Birthday),
 	}
 
 	err = s.userRepository.Save(user)
@@ -59,32 +136,21 @@ func (s *AuthService) Signup(authDTO *DTO.AuthDTO) error {
 	return nil
 }
 
-func (s *AuthService) ChangePassword(user *Entity.User, authDTO *DTO.AuthDTO) error {
-	user.PasswordHash = s.getPasswordHash(authDTO.NewPassword)
-
-	err := s.userRepository.Save(user)
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (*AuthService) GetJWTTokenForUser(user *Entity.User, tokenLifeTime int64, tokenSecret string) (*ValueObject.JWTToken, error) {
+func (s *AuthService) createToken(secret string, lifeTime int64, userID uint) (*ValueObject.JWT, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 
-	expiresAt := time.Now().Add(time.Duration(tokenLifeTime) * time.Second).Unix()
+	expiresAt := time.Now().Add(time.Duration(lifeTime) * time.Second).Unix()
 
 	claims := token.Claims.(jwt.MapClaims)
-	claims["user_id"] = user.ID
+	claims["user_id"] = userID
 	claims["exp"] = expiresAt
 
-	t, err := token.SignedString([]byte(tokenSecret))
+	t, err := token.SignedString([]byte(secret))
 	if err != nil {
 		return nil, err
 	}
 
-	return ValueObject.NewJWTToken(t, expiresAt), nil
+	return ValueObject.NewJWT(t, expiresAt), nil
 }
 
 func (*AuthService) getPasswordHash(password string) string {

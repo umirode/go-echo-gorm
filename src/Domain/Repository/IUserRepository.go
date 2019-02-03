@@ -6,9 +6,7 @@ import (
 
 type IUserRepository interface {
 	Save(user *Entity.User) error
-	Delete(user *Entity.User) error
 
-	FindAll() ([]*Entity.User, error)
 	FindOneByID(id uint) (*Entity.User, error)
 	FindOneByEmail(email string) (*Entity.User, error)
 	FindOneByEmailAndPassword(email string, password string) (*Entity.User, error)

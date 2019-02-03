@@ -17,29 +17,33 @@ func NewBirthdayService(birthdayRepository Repository.IBirthdayRepository) *Birt
 	}
 }
 
-func (s *BirthdayService) GetAllForUser(user *Entity.User) ([]*Entity.Birthday, error) {
-	users, err := s.birthdayRepository.FindAllByUser(user)
+func (s *BirthdayService) GetOneByIdAndUser(id uint, user *Entity.User) (*Entity.Birthday, error) {
+	birthday, err := s.birthdayRepository.FindOneByIdAndUser(id, user)
 	if err != nil {
 		return nil, err
 	}
 
-	return users, nil
-}
-
-func (s *BirthdayService) GetOneById(id uint) (*Entity.Birthday, error) {
-	user, err := s.birthdayRepository.FindOneById(id)
-	if err != nil {
+	if birthday == nil {
 		return nil, Error.NewNotFoundError()
 	}
 
-	return user, nil
+	return birthday, nil
+}
+
+func (s *BirthdayService) GetAllByUser(user *Entity.User) ([]*Entity.Birthday, error) {
+	birthdays, err := s.birthdayRepository.FindAllByUser(user)
+	if err != nil {
+		return nil, err
+	}
+
+	return birthdays, nil
 }
 
 func (s *BirthdayService) Create(birthdayDTO *DTO.BirthdayDTO, user *Entity.User) error {
 	birthday := &Entity.Birthday{
-		Name: birthdayDTO.Name,
-		Date: birthdayDTO.Date,
-		User: user,
+		Name:    birthdayDTO.Name,
+		Date:    birthdayDTO.Date,
+		OwnerID: user.ID,
 	}
 
 	err := s.birthdayRepository.Save(birthday)
@@ -52,7 +56,7 @@ func (s *BirthdayService) Create(birthdayDTO *DTO.BirthdayDTO, user *Entity.User
 }
 
 func (s *BirthdayService) Update(birthday *Entity.Birthday, birthdayDTO *DTO.BirthdayDTO, user *Entity.User) error {
-	if birthday.User.ID != user.ID {
+	if birthday.OwnerID != user.ID {
 		return Error.NewAccessError()
 	}
 
@@ -69,7 +73,7 @@ func (s *BirthdayService) Update(birthday *Entity.Birthday, birthdayDTO *DTO.Bir
 }
 
 func (s *BirthdayService) Delete(birthday *Entity.Birthday, user *Entity.User) error {
-	if birthday.User.ID != user.ID {
+	if birthday.OwnerID != user.ID {
 		return Error.NewAccessError()
 	}
 

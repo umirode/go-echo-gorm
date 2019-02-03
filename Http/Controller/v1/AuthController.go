@@ -1,7 +1,8 @@
-package Controller
+package v1
 
 import (
 	"github.com/labstack/echo"
+	"github.com/umirode/go-rest/Http/Controller"
 	"github.com/umirode/go-rest/Http/Error"
 	"github.com/umirode/go-rest/src/Domain/Service"
 	"github.com/umirode/go-rest/src/Domain/Service/DTO"
@@ -9,23 +10,14 @@ import (
 )
 
 type AuthController struct {
-	BaseController
-
-	JWT struct {
-		ExpiresAt int64 // time in seconds
-		Secret    string
-	}
+	Controller.BaseController
 
 	AuthService Service.IAuthService
 }
 
-func NewAuthController(authService Service.IAuthService, userService Service.IUserService, JWTExpiresAt int64, JWTSecret string) *AuthController {
+func NewAuthController(authService Service.IAuthService, userService Service.IUserService) *AuthController {
 	controller := &AuthController{
 		AuthService: authService,
-		JWT: struct {
-			ExpiresAt int64
-			Secret    string
-		}{ExpiresAt: JWTExpiresAt, Secret: JWTSecret},
 	}
 
 	controller.UserService = userService
@@ -52,22 +44,19 @@ func (c *AuthController) Login(context echo.Context) error {
 		Password: loginData.Password,
 	}
 
-	user, err := c.AuthService.Login(authDTO)
-	if err != nil {
-		return err
-	}
-
-	jwtToken, err := c.AuthService.GetJWTTokenForUser(user, c.JWT.ExpiresAt, c.JWT.Secret)
+	accessToken, refreshToken, err := c.AuthService.Login(authDTO)
 	if err != nil {
 		return err
 	}
 
 	return context.JSON(http.StatusOK, struct {
-		Token     string `json:"token"`
-		ExpiresAt int64  `json:"expires_at"`
+		AccessToken     string `json:"access_token"`
+		RefreshToken    string `json:"refresh_token"`
+		AccessExpiresAt int64  `json:"access_expires_at"`
 	}{
-		Token:     jwtToken.Token,
-		ExpiresAt: jwtToken.ExpiresAt,
+		AccessToken:     accessToken.Token,
+		AccessExpiresAt: accessToken.ExpiresAt,
+		RefreshToken:    refreshToken.Token,
 	})
 }
 
@@ -98,34 +87,29 @@ func (c *AuthController) Signup(context echo.Context) error {
 	return context.JSON(http.StatusOK, nil)
 }
 
-func (c *AuthController) ChangePassword(context echo.Context) error {
-	resetPasswordData := new(struct {
-		Password    string `json:"password" validate:"required"`
-		NewPassword string `json:"new_password" validate:"required,min=8"`
+func (c *AuthController) RefreshToken(context echo.Context) error {
+	user, err := c.GetCurrentUser(context)
+	if err != nil {
+		return err
+	}
+
+	token, err := c.GetToken(context)
+	if err != nil {
+		return err
+	}
+
+	accessToken, refreshToken, err := c.AuthService.RefreshJWT(user, token.Raw)
+	if err != nil {
+		return err
+	}
+
+	return context.JSON(http.StatusOK, struct {
+		AccessToken     string `json:"access_token"`
+		RefreshToken    string `json:"refresh_token"`
+		AccessExpiresAt int64  `json:"access_expires_at"`
+	}{
+		AccessToken:     accessToken.Token,
+		AccessExpiresAt: accessToken.ExpiresAt,
+		RefreshToken:    refreshToken.Token,
 	})
-
-	if err := context.Bind(resetPasswordData); err != nil {
-		return Error.NewRequestParsingError()
-	}
-
-	if err := context.Validate(resetPasswordData); err != nil {
-		return err
-	}
-
-	user, err := c.getCurrentUser(context)
-	if err != nil {
-		return err
-	}
-
-	authDTO := &DTO.AuthDTO{
-		Password:    resetPasswordData.Password,
-		NewPassword: resetPasswordData.NewPassword,
-	}
-
-	err = c.AuthService.ChangePassword(user, authDTO)
-	if err != nil {
-		return err
-	}
-
-	return context.JSON(http.StatusOK, nil)
 }

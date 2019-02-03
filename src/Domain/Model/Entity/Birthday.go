@@ -5,12 +5,10 @@ import (
 )
 
 type Birthday struct {
-	ID        uint
-	CreatedAt time.Time
-	UpdatedAt time.Time
+	ID uint
 
 	Name string
 	Date time.Time
 
-	User *User
+	OwnerID uint // User
 }

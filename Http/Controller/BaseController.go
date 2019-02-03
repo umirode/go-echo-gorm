@@ -13,7 +13,7 @@ type BaseController struct {
 	UserService Service.IUserService
 }
 
-func (c *BaseController) getToken(context echo.Context) (*jwt.Token, error) {
+func (c *BaseController) GetToken(context echo.Context) (*jwt.Token, error) {
 	token, ok := context.Get("user").(*jwt.Token)
 	if !ok {
 		return nil, Error.NewInvalidTokenError()
@@ -22,8 +22,8 @@ func (c *BaseController) getToken(context echo.Context) (*jwt.Token, error) {
 	return token, nil
 }
 
-func (c *BaseController) getTokenClaims(context echo.Context) (jwt.MapClaims, error) {
-	token, err := c.getToken(context)
+func (c *BaseController) GetTokenClaims(context echo.Context) (jwt.MapClaims, error) {
+	token, err := c.GetToken(context)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +36,7 @@ func (c *BaseController) getTokenClaims(context echo.Context) (jwt.MapClaims, er
 	return claims, nil
 }
 
-func (c *BaseController) getParam(context echo.Context, key string, valueType string) (interface{}, error) {
+func (c *BaseController) GetParam(context echo.Context, key string, valueType string) (interface{}, error) {
 	param := context.Param(key)
 	if param == "" {
 		return nil, Error.NewRequestParsingError()
@@ -61,8 +61,8 @@ func (c *BaseController) getParam(context echo.Context, key string, valueType st
 	return nil, Error.NewRequestParsingError()
 }
 
-func (c *BaseController) getCurrentUser(context echo.Context) (*Entity.User, error) {
-	claims, err := c.getTokenClaims(context)
+func (c *BaseController) GetCurrentUser(context echo.Context) (*Entity.User, error) {
+	claims, err := c.GetTokenClaims(context)
 	if err != nil {
 		return nil, err
 	}

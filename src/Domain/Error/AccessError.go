@@ -8,7 +8,7 @@ type AccessError struct {
 }
 
 func (*AccessError) Error() string {
-	return "Not found"
+	return "Access error"
 }
 
 func (*AccessError) Status() int {

@@ -5,6 +5,4 @@ type User struct {
 
 	Email        string
 	PasswordHash string
-
-	Birthdays []*Birthday
 }

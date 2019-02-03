@@ -19,6 +19,10 @@ func NewUserService(userRepository Repository.IUserRepository) *UserService {
 func (s *UserService) GetOneById(id uint) (*Entity.User, error) {
 	user, err := s.userRepository.FindOneByID(id)
 	if err != nil {
+		return nil, err
+	}
+
+	if user == nil {
 		return nil, Error.NewNotFoundError()
 	}
 

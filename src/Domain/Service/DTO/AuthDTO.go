@@ -1,7 +1,6 @@
 package DTO
 
 type AuthDTO struct {
-	Email       string
-	Password    string
-	NewPassword string
+	Email    string
+	Password string
 }
