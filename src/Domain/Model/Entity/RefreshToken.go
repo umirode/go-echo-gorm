@@ -1,10 +1,10 @@
 package Entity
 
 type RefreshToken struct {
-	ID uint
+	ID uint `gorm:"primary_key"`
 
-	Token     string
-	ExpiresAt int64
+	Token     string `gorm:"size:255"`
+	ExpiresAt int64  `gorm:"size:20"`
 
 	OwnerID uint // User
 }

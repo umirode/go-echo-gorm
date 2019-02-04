@@ -1,10 +1,7 @@
 package DTO
 
-import (
-	"time"
-)
-
 type BirthdayDTO struct {
-	Name string
-	Date time.Time
+	Name   string
+	Month  uint
+	Number uint
 }

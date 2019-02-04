@@ -1,7 +1,5 @@
 FROM golang:1.11.1-alpine3.8 as builder
 
-ENV GOLANG_APP_REPOSITORY='github.com/umirode/go-rest'
-
 WORKDIR $GOPATH/src/$GOLANG_APP_REPOSITORY
 
 COPY Gopkg.toml Gopkg.lock ./

@@ -28,7 +28,7 @@ func NewAuthController(authService Service.IAuthService, userService Service.IUs
 func (c *AuthController) Login(context echo.Context) error {
 	loginData := new(struct {
 		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required,min=8"`
+		Password string `json:"password" validate:"required,min=8,max=255"`
 	})
 
 	if err := context.Bind(loginData); err != nil {
@@ -63,7 +63,7 @@ func (c *AuthController) Login(context echo.Context) error {
 func (c *AuthController) Signup(context echo.Context) error {
 	signupData := new(struct {
 		Email    string `json:"email" validate:"required,email"`
-		Password string `json:"password" validate:"required,min=8"`
+		Password string `json:"password" validate:"required,min=8,max=255"`
 	})
 
 	if err := context.Bind(signupData); err != nil {

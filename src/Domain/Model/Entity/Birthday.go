@@ -1,14 +1,11 @@
 package Entity
 
-import (
-	"time"
-)
-
 type Birthday struct {
-	ID uint
+	ID uint `gorm:"primary_key"`
 
-	Name string
-	Date time.Time
+	Name   string `gorm:"size:20"`
+	Month  uint   `gorm:"size:2"`
+	Number uint   `gorm:"size:2"`
 
 	OwnerID uint // User
 }

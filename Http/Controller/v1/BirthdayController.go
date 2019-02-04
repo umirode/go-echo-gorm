@@ -9,7 +9,6 @@ import (
 	"github.com/umirode/go-rest/src/Domain/Service"
 	"github.com/umirode/go-rest/src/Domain/Service/DTO"
 	"net/http"
-	"time"
 )
 
 type BirthdayController struct {
@@ -73,8 +72,9 @@ func (c *BirthdayController) GetOne(context echo.Context) error {
 
 func (c *BirthdayController) Create(context echo.Context) error {
 	data := new(struct {
-		Name string `json:"name" validate:"required,max=100"`
-		Date string `json:"date" validate:"required,date"`
+		Name   string `json:"name" validate:"required,max=20"`
+		Month  uint   `json:"month" validate:"required,max=12"`
+		Number uint   `json:"number" validate:"required,max=31"`
 	})
 
 	if err := context.Bind(data); err != nil {
@@ -91,12 +91,9 @@ func (c *BirthdayController) Create(context echo.Context) error {
 	}
 
 	birthdayDTO := &DTO.BirthdayDTO{
-		Name: data.Name,
-	}
-
-	birthdayDTO.Date, err = time.Parse(time.RFC822, data.Date)
-	if err != nil {
-		return err
+		Name:   data.Name,
+		Month:  data.Month,
+		Number: data.Number,
 	}
 
 	err = c.BirthdayService.Create(birthdayDTO, user)
@@ -114,8 +111,9 @@ func (c *BirthdayController) Update(context echo.Context) error {
 	}
 
 	data := new(struct {
-		Name string `json:"name" validate:"required,max=100"`
-		Date string `json:"date" validate:"required,len=10,date"`
+		Name   string `json:"name" validate:"required,max=20"`
+		Month  uint   `json:"month" validate:"required,max=12"`
+		Number uint   `json:"number" validate:"required,max=31"`
 	})
 
 	if err := context.Bind(data); err != nil {
@@ -137,12 +135,9 @@ func (c *BirthdayController) Update(context echo.Context) error {
 	}
 
 	birthdayDTO := &DTO.BirthdayDTO{
-		Name: data.Name,
-	}
-
-	birthdayDTO.Date, err = time.Parse(time.RFC822, data.Date)
-	if err != nil {
-		return err
+		Name:   data.Name,
+		Month:  data.Month,
+		Number: data.Number,
 	}
 
 	err = c.BirthdayService.Update(birthday, birthdayDTO, user)

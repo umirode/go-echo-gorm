@@ -14,8 +14,6 @@ func NewValidator() *Validator {
 		Validator: validator.New(),
 	}
 
-	v.registerCustomValidator(Custom.NewDateCustomValidator())
-
 	return v
 }
 

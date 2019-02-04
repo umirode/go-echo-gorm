@@ -1,8 +1,8 @@
 package Entity
 
 type User struct {
-	ID uint
+	ID uint `gorm:"primary_key"`
 
-	Email        string
-	PasswordHash string
+	Email        string `gorm:"size:500"`
+	PasswordHash string `gorm:"size:40"`
 }

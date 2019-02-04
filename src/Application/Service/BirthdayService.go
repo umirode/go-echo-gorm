@@ -42,7 +42,8 @@ func (s *BirthdayService) GetAllByUser(user *Entity.User) ([]*Entity.Birthday, e
 func (s *BirthdayService) Create(birthdayDTO *DTO.BirthdayDTO, user *Entity.User) error {
 	birthday := &Entity.Birthday{
 		Name:    birthdayDTO.Name,
-		Date:    birthdayDTO.Date,
+		Month:   birthdayDTO.Month,
+		Number:  birthdayDTO.Number,
 		OwnerID: user.ID,
 	}
 
@@ -61,7 +62,8 @@ func (s *BirthdayService) Update(birthday *Entity.Birthday, birthdayDTO *DTO.Bir
 	}
 
 	birthday.Name = birthdayDTO.Name
-	birthday.Date = birthdayDTO.Date
+	birthday.Number = birthdayDTO.Number
+	birthday.Month = birthdayDTO.Month
 
 	err := s.birthdayRepository.Save(birthday)
 
