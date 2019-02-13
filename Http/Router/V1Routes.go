@@ -8,24 +8,13 @@ import (
 	"github.com/umirode/go-rest/src/Infrastructure/Persistence/Gorm/Repository"
 )
 
-/**
-POST /v1/auth/login
-POST /v1/auth/signup
-POST /v1/auth/refresh-token
-POST /v1/auth/logout
-
-GET /v1/birthdays
-POST /v1/birthdays
-PUT /v1/birthdays/{id}
-GET /v1/birthdays/{id}
-DELETE /v1/birthdays/{id}
-*/
 func (r *Router) setV1Routes() {
 	config := Config.GetJWTConfig()
 
 	userRepository := Repository.NewUserRepository(r.Database)
 	birthdayRepository := Repository.NewBirthdayRepository(r.Database)
 	refreshTokenRepository := Repository.NewRefreshTokenRepository(r.Database)
+	notificationTokenRepository := Repository.NewNotificationTokenRepository(r.Database)
 
 	authController := v1.NewAuthController(
 		Service.NewAuthService(
@@ -41,6 +30,11 @@ func (r *Router) setV1Routes() {
 
 	birthdayController := v1.NewBirthdayController(
 		Service.NewBirthdayService(birthdayRepository),
+		Service.NewUserService(userRepository),
+	)
+
+	notificationController := v1.NewNotificationController(
+		Service.NewNotificationTokenService(notificationTokenRepository),
 		Service.NewUserService(userRepository),
 	)
 
@@ -60,4 +54,9 @@ func (r *Router) setV1Routes() {
 	birthdayRoutes.GET("/:birthday_id", birthdayController.GetOne)
 	birthdayRoutes.PUT("/:birthday_id", birthdayController.Update)
 	birthdayRoutes.DELETE("/:birthday_id", birthdayController.Delete)
+
+	notificationRoutes := v1Routes.Group("/notifications")
+	notificationRoutes.Use(Middleware.NewJWTMiddleware(config.AccessTokenSecret).Middleware)
+
+	notificationRoutes.POST("/tokens", notificationController.SaveToken)
 }

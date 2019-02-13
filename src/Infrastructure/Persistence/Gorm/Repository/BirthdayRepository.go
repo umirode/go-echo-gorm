@@ -30,7 +30,7 @@ func (r *BirthdayRepository) Delete(birthday *Entity.Birthday) error {
 func (r *BirthdayRepository) FindAllByUser(user *Entity.User) ([]*Entity.Birthday, error) {
 	birthdays := new([]*Entity.Birthday)
 
-	r.db.Where("owner_id", user.ID).Find(birthdays)
+	r.db.Where("owner_id = ?", user.ID).Find(birthdays)
 
 	return *birthdays, nil
 }
@@ -38,7 +38,7 @@ func (r *BirthdayRepository) FindAllByUser(user *Entity.User) ([]*Entity.Birthda
 func (r *BirthdayRepository) FindOneByIdAndUser(id uint, user *Entity.User) (*Entity.Birthday, error) {
 	birthday := &Entity.Birthday{}
 
-	r.db.Where("id = ? and owner_id", id, user.ID).First(birthday)
+	r.db.Where("id = ? and owner_id = ?", id, user.ID).First(birthday)
 	if r.db.NewRecord(birthday) {
 		return nil, nil
 	}

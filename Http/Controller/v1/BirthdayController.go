@@ -74,7 +74,7 @@ func (c *BirthdayController) Create(context echo.Context) error {
 	data := new(struct {
 		Name   string `json:"name" validate:"required,max=20"`
 		Month  uint   `json:"month" validate:"required,max=12"`
-		Number uint   `json:"number" validate:"required,max=31"`
+		Day uint   `json:"day" validate:"required,max=31"`
 	})
 
 	if err := context.Bind(data); err != nil {
@@ -93,7 +93,7 @@ func (c *BirthdayController) Create(context echo.Context) error {
 	birthdayDTO := &DTO.BirthdayDTO{
 		Name:   data.Name,
 		Month:  data.Month,
-		Number: data.Number,
+		Day: data.Day,
 	}
 
 	err = c.BirthdayService.Create(birthdayDTO, user)
@@ -113,7 +113,7 @@ func (c *BirthdayController) Update(context echo.Context) error {
 	data := new(struct {
 		Name   string `json:"name" validate:"required,max=20"`
 		Month  uint   `json:"month" validate:"required,max=12"`
-		Number uint   `json:"number" validate:"required,max=31"`
+		Day uint   `json:"day" validate:"required,max=31"`
 	})
 
 	if err := context.Bind(data); err != nil {
@@ -137,7 +137,7 @@ func (c *BirthdayController) Update(context echo.Context) error {
 	birthdayDTO := &DTO.BirthdayDTO{
 		Name:   data.Name,
 		Month:  data.Month,
-		Number: data.Number,
+		Day: data.Day,
 	}
 
 	err = c.BirthdayService.Update(birthday, birthdayDTO, user)

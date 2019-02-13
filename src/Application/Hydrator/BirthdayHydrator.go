@@ -21,7 +21,8 @@ func (*BirthdayHydrator) Extract(object interface{}) (map[string]interface{}, er
 	return map[string]interface{}{
 		"id":     birthday.ID,
 		"month":  birthday.Month,
-		"number": birthday.Number,
+		"day": birthday.Day,
 		"name":   birthday.Name,
+		"year":   birthday.Year,
 	}, nil
 }

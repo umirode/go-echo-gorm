@@ -1,6 +1,6 @@
 FROM golang:1.11.1-alpine3.8 as builder
 
-WORKDIR $GOPATH/src/$GOLANG_APP_REPOSITORY
+WORKDIR $GOPATH/src/${APP_REPOSITPRY}
 
 COPY Gopkg.toml Gopkg.lock ./
 RUN \

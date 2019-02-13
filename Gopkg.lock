@@ -10,6 +10,14 @@
   version = "v0.28.0"
 
 [[projects]]
+  branch = "master"
+  digest = "1:d60a6983f605420d17520ad3e206319a252989044f4ac580799575c850d4eb41"
+  name = "github.com/NaySoftware/go-fcm"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "28fff9381d17f35619309c7a5ada41d26030d976"
+
+[[projects]]
   digest = "1:b54d0bac22af44cd667bd47abe1b1dd2136a19cfb0f862bb8bb9d02d81487e9c"
   name = "github.com/Selvatico/go-mocket"
   packages = ["."]
@@ -288,6 +296,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/NaySoftware/go-fcm",
     "github.com/Selvatico/go-mocket",
     "github.com/Sirupsen/logrus",
     "github.com/dgrijalva/jwt-go",
@@ -297,7 +306,6 @@
     "github.com/jinzhu/gorm/dialects/mysql",
     "github.com/jinzhu/gorm/dialects/postgres",
     "github.com/jinzhu/gorm/dialects/sqlite",
-    "github.com/jinzhu/inflection",
     "github.com/joho/godotenv",
     "github.com/labstack/echo",
     "github.com/labstack/echo/middleware",

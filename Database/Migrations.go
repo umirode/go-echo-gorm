@@ -10,5 +10,6 @@ func RunMigrations(db *gorm.DB) {
 		&Entity.User{},
 		&Entity.Birthday{},
 		&Entity.RefreshToken{},
+		&Entity.NotificationToken{},
 	)
 }

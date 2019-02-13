@@ -7,6 +7,7 @@ import (
 	"github.com/umirode/go-rest/Config"
 	"github.com/umirode/go-rest/Database"
 	"github.com/umirode/go-rest/Http/Router"
+	"github.com/umirode/go-rest/NotificationHandler"
 )
 
 func main() {
@@ -44,14 +45,26 @@ func main() {
 	*/
 	Database.RunMigrations(db)
 
-	/**
-	Get server address
-	*/
-	serverConfig := Config.GetServerConfig()
-	serverAddress := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
+	go func() {
+		/**
+		Get server address
+		*/
+		serverConfig := Config.GetServerConfig()
+		serverAddress := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
 
-	/**
-	Start server
-	*/
-	logrus.Fatal(Router.NewRouter(db, serverConfig.Debug).Router.Start(serverAddress))
+		/**
+		Start server
+		*/
+		logrus.Fatal(Router.NewRouter(db, serverConfig.Debug).Router.Start(serverAddress))
+	}()
+
+	go func() {
+		firebaseConfig := Config.GetFirebaseConfig()
+
+		notification := NotificationHandler.NewNotificationHandler(db, firebaseConfig.CloudMessagingKey)
+		notification.Run()
+	}()
+
+	var input string
+	fmt.Scanln(&input)
 }
