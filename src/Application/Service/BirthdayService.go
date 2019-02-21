@@ -40,14 +40,19 @@ func (s *BirthdayService) GetAllByUser(user *Entity.User) ([]*Entity.Birthday, e
 }
 
 func (s *BirthdayService) Create(birthdayDTO *DTO.BirthdayDTO, user *Entity.User) error {
+	userBirthdaysCount, err := s.birthdayRepository.CountByUser(user)
+	if userBirthdaysCount >= 100 {
+		return Error.NewBirthdaysLimitError()
+	}
+
 	birthday := &Entity.Birthday{
 		Name:    birthdayDTO.Name,
 		Month:   birthdayDTO.Month,
-		Day:  birthdayDTO.Day,
+		Day:     birthdayDTO.Day,
 		OwnerID: user.ID,
 	}
 
-	err := s.birthdayRepository.Save(birthday)
+	err = s.birthdayRepository.Save(birthday)
 
 	if err != nil {
 		return err

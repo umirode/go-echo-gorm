@@ -49,7 +49,7 @@ func (c *AuthController) Login(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, struct {
+	return c.Response(context, http.StatusOK, struct {
 		AccessToken     string `json:"access_token"`
 		RefreshToken    string `json:"refresh_token"`
 		AccessExpiresAt int64  `json:"access_expires_at"`
@@ -57,7 +57,7 @@ func (c *AuthController) Login(context echo.Context) error {
 		AccessToken:     accessToken.Token,
 		AccessExpiresAt: accessToken.ExpiresAt,
 		RefreshToken:    refreshToken.Token,
-	})
+	}, "")
 }
 
 func (c *AuthController) Signup(context echo.Context) error {
@@ -84,7 +84,7 @@ func (c *AuthController) Signup(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, nil)
+	return c.Response(context, http.StatusOK, nil, "")
 }
 
 func (c *AuthController) RefreshToken(context echo.Context) error {
@@ -103,7 +103,7 @@ func (c *AuthController) RefreshToken(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, struct {
+	return c.Response(context, http.StatusOK, struct {
 		AccessToken     string `json:"access_token"`
 		RefreshToken    string `json:"refresh_token"`
 		AccessExpiresAt int64  `json:"access_expires_at"`
@@ -111,5 +111,5 @@ func (c *AuthController) RefreshToken(context echo.Context) error {
 		AccessToken:     accessToken.Token,
 		AccessExpiresAt: accessToken.ExpiresAt,
 		RefreshToken:    refreshToken.Token,
-	})
+	}, "")
 }

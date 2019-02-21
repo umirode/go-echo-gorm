@@ -27,6 +27,14 @@ func (r *BirthdayRepository) Delete(birthday *Entity.Birthday) error {
 	return nil
 }
 
+func (r *BirthdayRepository) CountByUser(user *Entity.User) (uint, error) {
+	count := new(uint)
+
+	r.db.Where("owner_id = ?", user.ID).Count(count)
+
+	return *count, nil
+}
+
 func (r *BirthdayRepository) FindAllByUser(user *Entity.User) ([]*Entity.Birthday, error) {
 	birthdays := new([]*Entity.Birthday)
 

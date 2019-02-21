@@ -52,5 +52,5 @@ func (c *NotificationController) SaveToken(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, nil)
+	return c.Response(context, http.StatusOK, nil, "")
 }

@@ -44,7 +44,7 @@ func (s *AuthService) Login(authDTO *DTO.AuthDTO) (*ValueObject.JWT, *ValueObjec
 		return nil, nil, Error.NewInvalidError()
 	}
 
-	s.refreshTokenRepository.DeleteOldTokensByUser(user)
+	err = s.refreshTokenRepository.DeleteOldTokensByUser(user)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -86,7 +86,7 @@ func (s *AuthService) RefreshJWT(user *Entity.User, token string) (*ValueObject.
 		return nil, nil, err
 	}
 
-	s.refreshTokenRepository.DeleteOldTokensByUser(user)
+	err = s.refreshTokenRepository.DeleteOldTokensByUser(user)
 	if err != nil {
 		return nil, nil, err
 	}

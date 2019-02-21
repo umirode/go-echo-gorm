@@ -46,7 +46,7 @@ func (c *BirthdayController) GetAll(context echo.Context) error {
 		birthdaysMapArray = append(birthdaysMapArray, birthdayMap)
 	}
 
-	return context.JSON(http.StatusOK, birthdaysMapArray)
+	return c.Response(context, http.StatusOK, birthdaysMapArray, "")
 }
 
 func (c *BirthdayController) GetOne(context echo.Context) error {
@@ -67,14 +67,14 @@ func (c *BirthdayController) GetOne(context echo.Context) error {
 
 	birthdayMap, _ := c.BirthdayHydrator.Extract(birthday)
 
-	return context.JSON(http.StatusOK, birthdayMap)
+	return c.Response(context, http.StatusOK, birthdayMap, "")
 }
 
 func (c *BirthdayController) Create(context echo.Context) error {
 	data := new(struct {
-		Name   string `json:"name" validate:"required,max=20"`
-		Month  uint   `json:"month" validate:"required,max=12"`
-		Day uint   `json:"day" validate:"required,max=31"`
+		Name  string `json:"name" validate:"required,max=20"`
+		Month uint   `json:"month" validate:"required,max=12"`
+		Day   uint   `json:"day" validate:"required,max=31"`
 	})
 
 	if err := context.Bind(data); err != nil {
@@ -91,9 +91,9 @@ func (c *BirthdayController) Create(context echo.Context) error {
 	}
 
 	birthdayDTO := &DTO.BirthdayDTO{
-		Name:   data.Name,
-		Month:  data.Month,
-		Day: data.Day,
+		Name:  data.Name,
+		Month: data.Month,
+		Day:   data.Day,
 	}
 
 	err = c.BirthdayService.Create(birthdayDTO, user)
@@ -101,7 +101,7 @@ func (c *BirthdayController) Create(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, nil)
+	return c.Response(context, http.StatusCreated, nil, "")
 }
 
 func (c *BirthdayController) Update(context echo.Context) error {
@@ -111,9 +111,9 @@ func (c *BirthdayController) Update(context echo.Context) error {
 	}
 
 	data := new(struct {
-		Name   string `json:"name" validate:"required,max=20"`
-		Month  uint   `json:"month" validate:"required,max=12"`
-		Day uint   `json:"day" validate:"required,max=31"`
+		Name  string `json:"name" validate:"required,max=20"`
+		Month uint   `json:"month" validate:"required,max=12"`
+		Day   uint   `json:"day" validate:"required,max=31"`
 	})
 
 	if err := context.Bind(data); err != nil {
@@ -135,9 +135,9 @@ func (c *BirthdayController) Update(context echo.Context) error {
 	}
 
 	birthdayDTO := &DTO.BirthdayDTO{
-		Name:   data.Name,
-		Month:  data.Month,
-		Day: data.Day,
+		Name:  data.Name,
+		Month: data.Month,
+		Day:   data.Day,
 	}
 
 	err = c.BirthdayService.Update(birthday, birthdayDTO, user)
@@ -145,7 +145,7 @@ func (c *BirthdayController) Update(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, nil)
+	return c.Response(context, http.StatusOK, nil, "")
 }
 
 func (c *BirthdayController) Delete(context echo.Context) error {
@@ -169,5 +169,5 @@ func (c *BirthdayController) Delete(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, nil)
+	return c.Response(context, http.StatusOK, nil, "")
 }

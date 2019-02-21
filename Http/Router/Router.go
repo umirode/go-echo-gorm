@@ -4,6 +4,7 @@ import (
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
+	"github.com/umirode/go-rest/Http"
 	"github.com/umirode/go-rest/Http/Middleware"
 	"github.com/umirode/go-rest/Validator"
 	"github.com/umirode/go-rest/src/Common"
@@ -49,18 +50,18 @@ func NewHTTPErrorHandler() *HTTPErrorHandler {
 }
 
 func (h *HTTPErrorHandler) Handler(err error, context echo.Context) {
-	message := new(struct {
-		Error interface{} `json:"error"`
-	})
+	response := new(Http.Response)
 
 	switch v := err.(type) {
 	case *echo.HTTPError:
-		message.Error = v.Message
-		context.JSON(v.Code, message)
+		response.Status = v.Code
+		response.Message = v.Message.(string)
+		response.Data = nil
 		break
 	case Common.IHttpError:
-		message.Error = v.Error()
-		context.JSON(v.Status(), message)
+		response.Status = v.Status()
+		response.Message = v.Error()
+		response.Data = nil
 		break
 	case goValidator.ValidationErrors:
 
@@ -71,12 +72,16 @@ func (h *HTTPErrorHandler) Handler(err error, context echo.Context) {
 			data[field] = append(data[field], validationErr.Tag())
 		}
 
-		message.Error = data
-		context.JSON(http.StatusUnprocessableEntity, message)
+		response.Status = http.StatusUnprocessableEntity
+		response.Message = "Invalid"
+		response.Data = data
 		break
 	default:
-		message.Error = v.Error()
-		context.JSON(http.StatusInternalServerError, message)
+		response.Status = http.StatusInternalServerError
+		response.Message = v.Error()
+		response.Data = nil
 		break
 	}
+
+	context.JSON(response.Status, response)
 }

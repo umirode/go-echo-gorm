@@ -19,10 +19,14 @@ func NewNotificationService(fcmAPIKey string, notificationTokenRepository Reposi
 	}
 }
 
-func (s *NotificationService) SendToAllUsers(notification *Entity.Notification) (error) {
+func (s *NotificationService) SendToAllUsers(notification *Entity.Notification) error {
 	tokens, err := s.notificationTokenRepository.FindAll()
 	if err != nil {
 		return err
+	}
+
+	if len(tokens) == 0 {
+		return nil
 	}
 
 	s.fcmClient.SetNotificationPayload(&fcm.NotificationPayload{
@@ -48,12 +52,16 @@ func (s *NotificationService) SendToAllUsers(notification *Entity.Notification) 
 	}
 
 	return nil
-	}
+}
 
-func (s *NotificationService) SendToSingleUser(notification *Entity.Notification, user *Entity.User) (error) {
+func (s *NotificationService) SendToSingleUser(notification *Entity.Notification, user *Entity.User) error {
 	tokens, err := s.notificationTokenRepository.FindAllByUser(user)
 	if err != nil {
 		return err
+	}
+
+	if len(tokens) == 0 {
+		return nil
 	}
 
 	s.fcmClient.SetNotificationPayload(&fcm.NotificationPayload{

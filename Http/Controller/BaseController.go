@@ -3,6 +3,7 @@ package Controller
 import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo"
+	"github.com/umirode/go-rest/Http"
 	"github.com/umirode/go-rest/Http/Error"
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 	"github.com/umirode/go-rest/src/Domain/Service"
@@ -47,15 +48,12 @@ func (c *BaseController) GetParam(context echo.Context, key string, valueType st
 		result, _ := strconv.Atoi(param)
 
 		return result, nil
-		break
 	case "uint":
 		result, _ := strconv.Atoi(param)
 
 		return uint(result), nil
-		break
 	case "string":
 		return param, nil
-		break
 	}
 
 	return nil, Error.NewRequestParsingError()
@@ -69,4 +67,8 @@ func (c *BaseController) GetCurrentUser(context echo.Context) (*Entity.User, err
 	userID := uint(claims["user_id"].(float64))
 
 	return c.UserService.GetOneById(userID)
+}
+
+func (c *BaseController) Response(context echo.Context, status int, data interface{}, message string) error {
+	return context.JSON(status, Http.NewResponse(status, data, message))
 }
