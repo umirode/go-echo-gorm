@@ -3,6 +3,7 @@ package DSN
 import (
 	"fmt"
 
+	"github.com/Sirupsen/logrus"
 	"github.com/umirode/go-rest/Database"
 )
 
@@ -26,6 +27,8 @@ func (d *Generator) GetDSN() string {
 		return fmt.Sprintf("%s", d.Config.Database)
 	case "mssql":
 		return fmt.Sprintf("sqlserver://%s:%s@%s:%d?database=%s&%s", d.Config.Username, d.Config.Password, d.Config.Host, d.Config.Port, d.Config.Database, d.Config.Params)
+	default:
+		logrus.Fatalf("Driver does not support: %s", d.Config.Driver)
 	}
 
 	return ""

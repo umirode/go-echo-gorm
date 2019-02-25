@@ -1,6 +1,7 @@
 package Validator
 
 import (
+	"github.com/Sirupsen/logrus"
 	"github.com/umirode/go-rest/Validator/Custom"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -18,5 +19,8 @@ func NewValidator() *Validator {
 }
 
 func (v *Validator) registerCustomValidator(customValidator Custom.ICustomValidator) {
-	v.Validator.RegisterValidation(customValidator.GetTag(), customValidator.GetValidator)
+	err := v.Validator.RegisterValidation(customValidator.GetTag(), customValidator.GetValidator)
+	if err != nil {
+		logrus.Error(err)
+	}
 }

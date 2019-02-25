@@ -19,6 +19,8 @@ func (r *Router) setV1Routes() {
 	authController := v1.NewAuthController(
 		Service.NewAuthService(
 			userRepository,
+		),
+		Service.NewJWTAuthService(
 			refreshTokenRepository,
 			config.AccessTokenSecret,
 			config.AccessTokenLifeTime,

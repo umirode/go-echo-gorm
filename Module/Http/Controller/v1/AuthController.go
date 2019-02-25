@@ -13,12 +13,18 @@ import (
 type AuthController struct {
 	Controller.BaseController
 
-	AuthService Service.IAuthService
+	AuthService    Service.IAuthService
+	JWTAuthService Service.IJWTAuthService
 }
 
-func NewAuthController(authService Service.IAuthService, userService Service.IUserService) *AuthController {
+func NewAuthController(
+	authService Service.IAuthService,
+	jwtAuthService Service.IJWTAuthService,
+	userService Service.IUserService,
+) *AuthController {
 	controller := &AuthController{
-		AuthService: authService,
+		AuthService:    authService,
+		JWTAuthService: jwtAuthService,
 	}
 
 	controller.UserService = userService
@@ -45,7 +51,12 @@ func (c *AuthController) Login(context echo.Context) error {
 		Password: loginData.Password,
 	}
 
-	accessToken, refreshToken, err := c.AuthService.Login(authDTO)
+	user, err := c.AuthService.Login(authDTO)
+	if err != nil {
+		return err
+	}
+
+	accessToken, refreshToken, err := c.JWTAuthService.CreateByUser(user)
 	if err != nil {
 		return err
 	}
@@ -80,12 +91,25 @@ func (c *AuthController) Signup(context echo.Context) error {
 		Password: signupData.Password,
 	}
 
-	err := c.AuthService.Signup(authDTO)
+	user, err := c.AuthService.Signup(authDTO)
 	if err != nil {
 		return err
 	}
 
-	return c.Response(context, http.StatusOK, nil, "")
+	accessToken, refreshToken, err := c.JWTAuthService.CreateByUser(user)
+	if err != nil {
+		return err
+	}
+
+	return c.Response(context, http.StatusOK, struct {
+		AccessToken     string `json:"access_token"`
+		RefreshToken    string `json:"refresh_token"`
+		AccessExpiresAt int64  `json:"access_expires_at"`
+	}{
+		AccessToken:     accessToken.Token,
+		AccessExpiresAt: accessToken.ExpiresAt,
+		RefreshToken:    refreshToken.Token,
+	}, "")
 }
 
 func (c *AuthController) RefreshToken(context echo.Context) error {
@@ -99,7 +123,7 @@ func (c *AuthController) RefreshToken(context echo.Context) error {
 		return err
 	}
 
-	accessToken, refreshToken, err := c.AuthService.RefreshJWT(user, token.Raw)
+	accessToken, refreshToken, err := c.JWTAuthService.Refresh(user, token.Raw)
 	if err != nil {
 		return err
 	}
