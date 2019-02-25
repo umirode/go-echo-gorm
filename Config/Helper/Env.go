@@ -1,4 +1,4 @@
-package Config
+package Helper
 
 import (
 	"os"

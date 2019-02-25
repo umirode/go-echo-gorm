@@ -22,7 +22,7 @@ func (s *NotificationTokenService) Create(tokenDTO *DTO.NotificationTokenDTO, us
 	if err != nil {
 		return err
 	}
-	if token != nil{
+	if token != nil {
 		return Error.NewAlreadyExistsError()
 	}
 

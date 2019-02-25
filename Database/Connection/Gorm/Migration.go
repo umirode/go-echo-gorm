@@ -1,15 +1,16 @@
-package Database
+package Gorm
 
 import (
 	"github.com/jinzhu/gorm"
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 )
 
-func RunMigrations(db *gorm.DB) {
+func runMigrations(db *gorm.DB) {
 	db.AutoMigrate(
-		&Entity.User{},
 		&Entity.Birthday{},
-		&Entity.RefreshToken{},
+		&Entity.Notification{},
 		&Entity.NotificationToken{},
+		&Entity.RefreshToken{},
+		&Entity.User{},
 	)
 }

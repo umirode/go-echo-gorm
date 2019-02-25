@@ -1,14 +1,15 @@
 package v1
 
 import (
+	"net/http"
+
 	"github.com/labstack/echo"
-	"github.com/umirode/go-rest/Http/Controller"
-	"github.com/umirode/go-rest/Http/Error"
+	"github.com/umirode/go-rest/Module/Http/Controller"
+	"github.com/umirode/go-rest/Module/Http/Error"
 	"github.com/umirode/go-rest/src/Application/Hydrator"
 	"github.com/umirode/go-rest/src/Common"
 	"github.com/umirode/go-rest/src/Domain/Service"
 	"github.com/umirode/go-rest/src/Domain/Service/DTO"
-	"net/http"
 )
 
 type BirthdayController struct {

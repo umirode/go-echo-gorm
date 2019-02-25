@@ -1,12 +1,14 @@
-package Database
+package DSN
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/umirode/go-rest/Database"
 )
 
-func TestNewDsnGenerator(t *testing.T) {
-	assert.NotEmpty(t, NewDsnGenerator(&Config{}))
+func TestNewGenerator(t *testing.T) {
+	assert.NotEmpty(t, NewGenerator(&Database.Config{}))
 }
 
 func TestDsnGenerator_GetDSN(t *testing.T) {
@@ -17,14 +19,14 @@ func TestDsnGenerator_GetDSN(t *testing.T) {
 		"mssql",
 	}
 
-	config := &Config{
+	config := &Database.Config{
 		Database: "test",
 	}
 
 	for _, driver := range drivers {
 		config.Driver = driver
 
-		dsnGenerator := NewDsnGenerator(config)
+		dsnGenerator := NewGenerator(config)
 
 		assert.NotEmpty(t, dsnGenerator.GetDSN())
 	}

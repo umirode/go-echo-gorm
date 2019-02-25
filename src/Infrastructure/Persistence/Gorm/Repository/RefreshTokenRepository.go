@@ -1,35 +1,33 @@
 package Repository
 
 import (
-	"github.com/jinzhu/gorm"
-	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 	"time"
+
+	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 )
 
 type RefreshTokenRepository struct {
-	db *gorm.DB
+	*BaseRepository
 }
 
-func NewRefreshTokenRepository(db *gorm.DB) *RefreshTokenRepository {
-	return &RefreshTokenRepository{
-		db: db,
-	}
+func NewRefreshTokenRepository() *RefreshTokenRepository {
+	return &RefreshTokenRepository{}
 }
 
 func (r *RefreshTokenRepository) DeleteOldTokensByUser(user *Entity.User) error {
-	r.db.Where("expires_at < ? and owner_id = ?", time.Now().Unix(), user.ID).Delete(&Entity.RefreshToken{})
+	r.GetDB().Where("expires_at < ? and owner_id = ?", time.Now().Unix(), user.ID).Delete(&Entity.RefreshToken{})
 
 	return nil
 }
 
 func (r *RefreshTokenRepository) Save(token *Entity.RefreshToken) error {
-	r.db.Save(token)
+	r.GetDB().Save(token)
 
 	return nil
 }
 
 func (r *RefreshTokenRepository) Delete(token *Entity.RefreshToken) error {
-	r.db.Delete(token)
+	r.GetDB().Delete(token)
 
 	return nil
 }
@@ -37,8 +35,8 @@ func (r *RefreshTokenRepository) Delete(token *Entity.RefreshToken) error {
 func (r *RefreshTokenRepository) FindOneByTokenAndUser(token string, user *Entity.User) (*Entity.RefreshToken, error) {
 	refreshToken := &Entity.RefreshToken{}
 
-	r.db.Where("token = ? and owner_id = ?", token, user.ID).First(refreshToken)
-	if r.db.NewRecord(refreshToken) {
+	r.GetDB().Where("token = ? and owner_id = ?", token, user.ID).First(refreshToken)
+	if r.GetDB().NewRecord(refreshToken) {
 		return nil, nil
 	}
 

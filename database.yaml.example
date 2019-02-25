@@ -1,0 +1,22 @@
+connections:
+  gorm:
+    local:
+      driver: sqlite3
+      debug: true
+      username:
+      password:
+      host:
+      port:
+      database: ignore/db.sqlite3
+      params:
+      selected: true
+    docker_mysql:
+      driver: mysql
+      debug: true
+      username: app_user
+      password:
+      host: mysql
+      port: 3306
+      database: app
+      params:
+      selected: false

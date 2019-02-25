@@ -1,9 +1,10 @@
 package Middleware
 
 import (
+	"testing"
+
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
-	"testing"
 )
 
 func TestNewJWTMiddleware(t *testing.T) {

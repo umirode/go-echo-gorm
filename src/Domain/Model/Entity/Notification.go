@@ -1,6 +1,6 @@
 package Entity
 
 type Notification struct {
-	Title string
+	Title   string
 	Message string
 }

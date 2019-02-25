@@ -2,6 +2,8 @@ package Config
 
 import (
 	"sync"
+
+	"github.com/umirode/go-rest/Config/Helper"
 )
 
 type ServerConfig struct {
@@ -16,9 +18,9 @@ var serverConfig *ServerConfig
 func GetServerConfig() *ServerConfig {
 	serverConfigOnce.Do(func() {
 		serverConfig = &ServerConfig{
-			Host:  GetEnv("SERVER_HOST", "string").(string),
-			Port:  GetEnv("SERVER_PORT", "uint").(uint),
-			Debug: GetEnv("SERVER_DEBUG", "bool").(bool),
+			Host:  Helper.GetEnv("SERVER_HOST", "string").(string),
+			Port:  Helper.GetEnv("SERVER_PORT", "uint").(uint),
+			Debug: Helper.GetEnv("SERVER_DEBUG", "bool").(bool),
 		}
 	})
 

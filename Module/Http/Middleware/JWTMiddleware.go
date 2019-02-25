@@ -3,7 +3,7 @@ package Middleware
 import (
 	"github.com/labstack/echo"
 	"github.com/labstack/echo/middleware"
-	"github.com/umirode/go-rest/Http/Error"
+	"github.com/umirode/go-rest/Module/Http/Error"
 )
 
 type JWTMiddleware struct {

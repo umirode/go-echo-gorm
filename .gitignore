@@ -3,3 +3,4 @@
 .idea/
 vendor/
 .env
+database.yaml

@@ -2,6 +2,8 @@ package Config
 
 import (
 	"sync"
+
+	"github.com/umirode/go-rest/Config/Helper"
 )
 
 type JWTConfig struct {
@@ -17,10 +19,10 @@ var jwtConfig *JWTConfig
 func GetJWTConfig() *JWTConfig {
 	jwtConfigOnce.Do(func() {
 		jwtConfig = &JWTConfig{
-			AccessTokenSecret:    GetEnv("JWT_ACCESS_SECRET", "string").(string),
-			AccessTokenLifeTime:  GetEnv("JWT_ACCESS_LIFE_TIME", "int64").(int64),
-			RefreshTokenSecret:   GetEnv("JWT_REFRESH_SECRET", "string").(string),
-			RefreshTokenLifeTime: GetEnv("JWT_REFRESH_LIFE_TIME", "int64").(int64),
+			AccessTokenSecret:    Helper.GetEnv("JWT_ACCESS_SECRET", "string").(string),
+			AccessTokenLifeTime:  Helper.GetEnv("JWT_ACCESS_LIFE_TIME", "int64").(int64),
+			RefreshTokenSecret:   Helper.GetEnv("JWT_REFRESH_SECRET", "string").(string),
+			RefreshTokenLifeTime: Helper.GetEnv("JWT_REFRESH_LIFE_TIME", "int64").(int64),
 		}
 	})
 

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"sync"
+
 	"github.com/Sirupsen/logrus"
 	"github.com/joho/godotenv"
-	"github.com/umirode/go-rest/Config"
-	"github.com/umirode/go-rest/Database"
-	"github.com/umirode/go-rest/Http/Router"
-	"github.com/umirode/go-rest/NotificationHandler"
+	"github.com/umirode/go-rest/Module"
+	"github.com/umirode/go-rest/Module/Http"
+	"github.com/umirode/go-rest/Module/Notification"
 )
 
 func main() {
@@ -16,55 +16,22 @@ func main() {
 	*/
 	err := godotenv.Load()
 	if err != nil {
-		logrus.Fatal(err.Error())
+		logrus.Fatal(err)
 	}
 
-	/**
-	Create database connection
-	*/
-	databaseConfig := Config.GetDatabaseConfig()
-	db, err := Database.NewDatabase(
-		&Database.Config{
-			Driver:   databaseConfig.Driver,
-			Debug:    databaseConfig.Debug,
-			Database: databaseConfig.Database,
-			Host:     databaseConfig.Host,
-			Port:     databaseConfig.Port,
-			Username: databaseConfig.Username,
-			Password: databaseConfig.Password,
-			Params:   databaseConfig.Params,
-		},
-	)
-	if err != nil {
-		logrus.Fatal(err.Error())
+	modules := getModules()
+	for _, module := range modules {
+		module.Init()
 	}
-	defer db.Close()
 
-	/**
-	Run migrations
-	*/
-	Database.RunMigrations(db)
+	wg := &sync.WaitGroup{}
+	wg.Add(1)
+	wg.Wait()
+}
 
-	go func() {
-		/**
-		Get server address
-		*/
-		serverConfig := Config.GetServerConfig()
-		serverAddress := fmt.Sprintf("%s:%d", serverConfig.Host, serverConfig.Port)
-
-		/**
-		Start server
-		*/
-		logrus.Fatal(Router.NewRouter(db, serverConfig.Debug).Router.Start(serverAddress))
-	}()
-
-	go func() {
-		firebaseConfig := Config.GetFirebaseConfig()
-
-		notification := NotificationHandler.NewNotificationHandler(db, firebaseConfig.CloudMessagingKey)
-		notification.Run()
-	}()
-
-	var input string
-	fmt.Scanln(&input)
+func getModules() []Module.IModule {
+	return []Module.IModule{
+		Http.NewModule(),
+		Notification.NewModule(),
+	}
 }

@@ -3,13 +3,14 @@ package Service
 import (
 	"crypto/sha1"
 	"fmt"
+	"time"
+
 	"github.com/dgrijalva/jwt-go"
 	"github.com/umirode/go-rest/src/Domain/Error"
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 	"github.com/umirode/go-rest/src/Domain/Model/ValueObject"
 	"github.com/umirode/go-rest/src/Domain/Repository"
 	"github.com/umirode/go-rest/src/Domain/Service/DTO"
-	"time"
 )
 
 type AuthService struct {

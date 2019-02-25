@@ -2,8 +2,8 @@ package Router
 
 import (
 	"github.com/umirode/go-rest/Config"
-	"github.com/umirode/go-rest/Http/Controller/v1"
-	"github.com/umirode/go-rest/Http/Middleware"
+	"github.com/umirode/go-rest/Module/Http/Controller/v1"
+	"github.com/umirode/go-rest/Module/Http/Middleware"
 	"github.com/umirode/go-rest/src/Application/Service"
 	"github.com/umirode/go-rest/src/Infrastructure/Persistence/Gorm/Repository"
 )
@@ -11,10 +11,10 @@ import (
 func (r *Router) setV1Routes() {
 	config := Config.GetJWTConfig()
 
-	userRepository := Repository.NewUserRepository(r.Database)
-	birthdayRepository := Repository.NewBirthdayRepository(r.Database)
-	refreshTokenRepository := Repository.NewRefreshTokenRepository(r.Database)
-	notificationTokenRepository := Repository.NewNotificationTokenRepository(r.Database)
+	userRepository := Repository.NewUserRepository()
+	birthdayRepository := Repository.NewBirthdayRepository()
+	refreshTokenRepository := Repository.NewRefreshTokenRepository()
+	notificationTokenRepository := Repository.NewNotificationTokenRepository()
 
 	authController := v1.NewAuthController(
 		Service.NewAuthService(

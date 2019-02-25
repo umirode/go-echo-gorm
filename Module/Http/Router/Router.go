@@ -1,28 +1,27 @@
 package Router
 
 import (
+	"net/http"
+
+	"github.com/Sirupsen/logrus"
 	"github.com/iancoleman/strcase"
-	"github.com/jinzhu/gorm"
 	"github.com/labstack/echo"
-	"github.com/umirode/go-rest/Http"
-	"github.com/umirode/go-rest/Http/Middleware"
+	"github.com/umirode/go-rest/Module/Http/Middleware"
+	"github.com/umirode/go-rest/Module/Http/Response"
 	"github.com/umirode/go-rest/Validator"
 	"github.com/umirode/go-rest/src/Common"
 	goValidator "gopkg.in/go-playground/validator.v9"
-	"net/http"
 )
 
 type Router struct {
-	Router   *echo.Echo
-	Database *gorm.DB
-	Debug    bool
+	Router *echo.Echo
+	Debug  bool
 }
 
-func NewRouter(database *gorm.DB, debug bool) *Router {
+func NewRouter(debug bool) *Router {
 	router := &Router{
-		Router:   echo.New(),
-		Database: database,
-		Debug:    debug,
+		Router: echo.New(),
+		Debug:  debug,
 	}
 	router.Router.Validator = Validator.NewOnlyStructValidator()
 
@@ -40,6 +39,9 @@ func (r *Router) init() {
 
 	r.Router.Use(Middleware.NewCorsMiddleware().Middleware)
 
+	/**
+	Set routes
+	*/
 	r.setV1Routes()
 }
 
@@ -50,7 +52,7 @@ func NewHTTPErrorHandler() *HTTPErrorHandler {
 }
 
 func (h *HTTPErrorHandler) Handler(err error, context echo.Context) {
-	response := new(Http.Response)
+	response := new(Response.Response)
 
 	switch v := err.(type) {
 	case *echo.HTTPError:
@@ -83,5 +85,8 @@ func (h *HTTPErrorHandler) Handler(err error, context echo.Context) {
 		break
 	}
 
-	context.JSON(response.Status, response)
+	err = context.JSON(response.Status, response)
+	if err != nil {
+		logrus.Error(err)
+	}
 }
