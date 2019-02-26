@@ -15,8 +15,8 @@ func NewNotificationTokenRepository() *NotificationTokenRepository {
 func (r *NotificationTokenRepository) FindOneByTokenAndUser(token string, user *Entity.User) (*Entity.NotificationToken, error) {
 	notificationToken := &Entity.NotificationToken{}
 
-	r.GetDB().Where("token = ? and owner_id = ?", token, user.ID).First(notificationToken)
-	if r.GetDB().NewRecord(notificationToken) {
+	r.GetGormDB().Where("token = ? and owner_id = ?", token, user.ID).First(notificationToken)
+	if r.GetGormDB().NewRecord(notificationToken) {
 		return nil, nil
 	}
 
@@ -26,7 +26,7 @@ func (r *NotificationTokenRepository) FindOneByTokenAndUser(token string, user *
 func (r *NotificationTokenRepository) FindAll() ([]*Entity.NotificationToken, error) {
 	tokens := new([]*Entity.NotificationToken)
 
-	r.GetDB().Find(tokens)
+	r.GetGormDB().Find(tokens)
 
 	return *tokens, nil
 }
@@ -34,19 +34,19 @@ func (r *NotificationTokenRepository) FindAll() ([]*Entity.NotificationToken, er
 func (r *NotificationTokenRepository) FindAllByUser(user *Entity.User) ([]*Entity.NotificationToken, error) {
 	tokens := new([]*Entity.NotificationToken)
 
-	r.GetDB().Where("owner_id = ?", user.ID).Find(tokens)
+	r.GetGormDB().Where("owner_id = ?", user.ID).Find(tokens)
 
 	return *tokens, nil
 }
 
 func (r *NotificationTokenRepository) Save(token *Entity.NotificationToken) error {
-	r.GetDB().Save(token)
+	r.GetGormDB().Save(token)
 
 	return nil
 }
 
 func (r *NotificationTokenRepository) Delete(token *Entity.NotificationToken) error {
-	r.GetDB().Delete(token)
+	r.GetGormDB().Delete(token)
 
 	return nil
 }

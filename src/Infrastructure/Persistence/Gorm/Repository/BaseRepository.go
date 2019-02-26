@@ -8,6 +8,6 @@ import (
 type BaseRepository struct {
 }
 
-func (r *BaseRepository) GetDB() *gorm.DB {
+func (r *BaseRepository) GetGormDB() *gorm.DB {
 	return Gorm.NewDatabase()
 }

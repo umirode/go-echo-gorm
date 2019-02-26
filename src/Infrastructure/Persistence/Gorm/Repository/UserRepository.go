@@ -13,7 +13,7 @@ func NewUserRepository() *UserRepository {
 }
 
 func (r *UserRepository) Save(user *Entity.User) error {
-	r.GetDB().Save(user)
+	r.GetGormDB().Save(user)
 
 	return nil
 }
@@ -21,8 +21,8 @@ func (r *UserRepository) Save(user *Entity.User) error {
 func (r *UserRepository) FindOneByID(id uint) (*Entity.User, error) {
 	user := &Entity.User{}
 
-	r.GetDB().Where("id = ?", id).First(user)
-	if r.GetDB().NewRecord(user) {
+	r.GetGormDB().Where("id = ?", id).First(user)
+	if r.GetGormDB().NewRecord(user) {
 		return nil, nil
 	}
 
@@ -32,8 +32,8 @@ func (r *UserRepository) FindOneByID(id uint) (*Entity.User, error) {
 func (r *UserRepository) FindOneByEmail(email string) (*Entity.User, error) {
 	user := &Entity.User{}
 
-	r.GetDB().Where("email = ?", email).First(user)
-	if r.GetDB().NewRecord(user) {
+	r.GetGormDB().Where("email = ?", email).First(user)
+	if r.GetGormDB().NewRecord(user) {
 		return nil, nil
 	}
 
@@ -43,8 +43,8 @@ func (r *UserRepository) FindOneByEmail(email string) (*Entity.User, error) {
 func (r *UserRepository) FindOneByEmailAndPassword(email string, password string) (*Entity.User, error) {
 	user := &Entity.User{}
 
-	r.GetDB().Where("email = ? and password_hash = ?", email, password).First(user)
-	if r.GetDB().NewRecord(user) {
+	r.GetGormDB().Where("email = ? and password_hash = ?", email, password).First(user)
+	if r.GetGormDB().NewRecord(user) {
 		return nil, nil
 	}
 

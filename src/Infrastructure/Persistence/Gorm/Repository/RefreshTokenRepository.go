@@ -15,19 +15,19 @@ func NewRefreshTokenRepository() *RefreshTokenRepository {
 }
 
 func (r *RefreshTokenRepository) DeleteOldTokensByUser(user *Entity.User) error {
-	r.GetDB().Where("expires_at < ? and owner_id = ?", time.Now().Unix(), user.ID).Delete(&Entity.RefreshToken{})
+	r.GetGormDB().Where("expires_at < ? and owner_id = ?", time.Now().Unix(), user.ID).Delete(&Entity.RefreshToken{})
 
 	return nil
 }
 
 func (r *RefreshTokenRepository) Save(token *Entity.RefreshToken) error {
-	r.GetDB().Save(token)
+	r.GetGormDB().Save(token)
 
 	return nil
 }
 
 func (r *RefreshTokenRepository) Delete(token *Entity.RefreshToken) error {
-	r.GetDB().Delete(token)
+	r.GetGormDB().Delete(token)
 
 	return nil
 }
@@ -35,8 +35,8 @@ func (r *RefreshTokenRepository) Delete(token *Entity.RefreshToken) error {
 func (r *RefreshTokenRepository) FindOneByTokenAndUser(token string, user *Entity.User) (*Entity.RefreshToken, error) {
 	refreshToken := &Entity.RefreshToken{}
 
-	r.GetDB().Where("token = ? and owner_id = ?", token, user.ID).First(refreshToken)
-	if r.GetDB().NewRecord(refreshToken) {
+	r.GetGormDB().Where("token = ? and owner_id = ?", token, user.ID).First(refreshToken)
+	if r.GetGormDB().NewRecord(refreshToken) {
 		return nil, nil
 	}
 
