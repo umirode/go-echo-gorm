@@ -7,7 +7,7 @@ import (
 )
 
 type RefreshTokenRepository struct {
-	*BaseRepository
+	BaseRepository
 }
 
 func NewRefreshTokenRepository() *RefreshTokenRepository {
@@ -30,6 +30,14 @@ func (r *RefreshTokenRepository) Delete(token *Entity.RefreshToken) error {
 	r.GetGormDB().Delete(token)
 
 	return nil
+}
+
+func (r *RefreshTokenRepository) CountByUser(user *Entity.User) (uint, error) {
+	count := new(uint)
+
+	r.GetGormDB().Model(&Entity.RefreshToken{}).Where("owner_id = ?", user.ID).Count(count)
+
+	return *count, nil
 }
 
 func (r *RefreshTokenRepository) FindOneByTokenAndUser(token string, user *Entity.User) (*Entity.RefreshToken, error) {

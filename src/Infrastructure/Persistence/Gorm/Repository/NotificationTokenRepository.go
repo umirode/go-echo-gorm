@@ -5,7 +5,7 @@ import (
 )
 
 type NotificationTokenRepository struct {
-	*BaseRepository
+	BaseRepository
 }
 
 func NewNotificationTokenRepository() *NotificationTokenRepository {

@@ -5,7 +5,7 @@ import (
 )
 
 type UserRepository struct {
-	*BaseRepository
+	BaseRepository
 }
 
 func NewUserRepository() *UserRepository {

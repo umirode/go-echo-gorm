@@ -5,7 +5,7 @@ import (
 )
 
 type BirthdayRepository struct {
-	*BaseRepository
+	BaseRepository
 }
 
 func NewBirthdayRepository() *BirthdayRepository {
@@ -27,7 +27,7 @@ func (r *BirthdayRepository) Delete(birthday *Entity.Birthday) error {
 func (r *BirthdayRepository) CountByUser(user *Entity.User) (uint, error) {
 	count := new(uint)
 
-	r.GetGormDB().Where("owner_id = ?", user.ID).Count(count)
+	r.GetGormDB().Model(&Entity.Birthday{}).Where("owner_id = ?", user.ID).Count(count)
 
 	return *count, nil
 }
