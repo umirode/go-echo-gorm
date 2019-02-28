@@ -20,6 +20,12 @@ func (r *RefreshTokenRepository) DeleteOldTokensByUser(user *Entity.User) error 
 	return nil
 }
 
+func (r *RefreshTokenRepository) DeleteAllTokensByUser(user *Entity.User) error {
+	r.GetGormDB().Where("owner_id = ?", user.ID).Delete(&Entity.RefreshToken{})
+
+	return nil
+}
+
 func (r *RefreshTokenRepository) Save(token *Entity.RefreshToken) error {
 	r.GetGormDB().Save(token)
 

@@ -11,4 +11,5 @@ type IRefreshTokenRepository interface {
 	CountByUser(user *Entity.User) (uint, error)
 	FindOneByTokenAndUser(token string, user *Entity.User) (*Entity.RefreshToken, error)
 	DeleteOldTokensByUser(user *Entity.User) error
+	DeleteAllTokensByUser(user *Entity.User) error
 }

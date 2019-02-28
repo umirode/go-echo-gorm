@@ -84,6 +84,18 @@ func (s *JWTAuthService) CreateByUser(user *Entity.User) (*ValueObject.JWT, *Val
 		return nil, nil, err
 	}
 
+	userRefreshTokensCount, err := s.refreshTokenRepository.CountByUser(user)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	if userRefreshTokensCount > 10 {
+		err := s.refreshTokenRepository.DeleteAllTokensByUser(user)
+		if err != nil {
+			return nil, nil, err
+		}
+	}
+
 	accessToken, err := s.createToken(s.accessTokenSecret, s.accessTokenLifeTime, user.ID)
 	if err != nil {
 		return nil, nil, err
