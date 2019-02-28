@@ -21,9 +21,13 @@ COPY . ./
 RUN \
     GOOS=linux \
     go build -i -o /build/app . && \
+    go build -i -o /build/cmd Cli/main.go && \
     \
     cp .env database.yaml /build/ && \
+    cp -R ignore /build/ && \
     \
     apk del .build-dependencies
+
+WORKDIR /build
 
 CMD /build/app
