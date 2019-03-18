@@ -1,5 +1,10 @@
 package Module
 
+import (
+	"sync"
+)
+
 type IModule interface {
-	Init()
+	Init(wg *sync.WaitGroup)
+	Close(wg *sync.WaitGroup)
 }

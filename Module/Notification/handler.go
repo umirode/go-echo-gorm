@@ -1,7 +1,7 @@
 package Notification
 
 import (
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/src/Application/Service"
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 	"github.com/umirode/go-rest/src/Infrastructure/Persistence/Gorm/Repository"

@@ -1,7 +1,7 @@
 package Validator
 
 import (
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Validator/Custom"
 	"gopkg.in/go-playground/validator.v9"
 )

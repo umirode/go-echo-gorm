@@ -1,11 +1,13 @@
 package Router
 
 import (
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Config"
 	"github.com/umirode/go-rest/Module/Http/Controller/v1"
 	"github.com/umirode/go-rest/Module/Http/Middleware"
 	"github.com/umirode/go-rest/src/Application/Service"
 	"github.com/umirode/go-rest/src/Infrastructure/Persistence/Gorm/Repository"
+	"github.com/umirode/golang-echo-socket.io"
 )
 
 func (r *Router) setV1Routes() {
@@ -61,4 +63,23 @@ func (r *Router) setV1Routes() {
 	notificationRoutes.Use(Middleware.NewJWTMiddleware(config.AccessTokenSecret).Middleware)
 
 	notificationRoutes.POST("/tokens", notificationController.SaveToken)
+
+	v1Routes.Any("/socket.io/", func() *golang_echo_socket_io.Wrapper {
+		socketIOController := v1.NewSocketIOController()
+
+		wrapper, err := golang_echo_socket_io.NewWrapper(nil)
+		if err != nil {
+			logrus.Error(err)
+		}
+
+		wrapper.OnConnect("/", socketIOController.OnConnect)
+		wrapper.OnError("/", socketIOController.OnError)
+		wrapper.OnDisconnect("/", socketIOController.OnDisconnect)
+
+		wrapper.OnEvent("/", "test", socketIOController.OnEventTest)
+
+		go wrapper.Server.Serve()
+
+		return wrapper
+	}().HandlerFunc)
 }

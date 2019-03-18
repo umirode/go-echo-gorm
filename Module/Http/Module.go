@@ -2,8 +2,9 @@ package Http
 
 import (
 	"fmt"
+	"sync"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Config"
 	"github.com/umirode/go-rest/Module/Http/Router"
 )
@@ -15,7 +16,7 @@ func NewModule() *Module {
 	return &Module{}
 }
 
-func (m *Module) Init() {
+func (m *Module) Init(wg *sync.WaitGroup) {
 	go func() {
 		/**
 		Get server address
@@ -28,4 +29,8 @@ func (m *Module) Init() {
 		*/
 		logrus.Fatal(Router.NewRouter(serverConfig.Debug).Router.Start(serverAddress))
 	}()
+}
+
+func (m *Module) Close(wg *sync.WaitGroup) {
+	println("test")
 }

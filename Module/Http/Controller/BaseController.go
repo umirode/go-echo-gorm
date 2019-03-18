@@ -60,6 +60,28 @@ func (c *BaseController) GetParam(context echo.Context, key string, valueType st
 	return nil, Error.NewRequestParsingError()
 }
 
+func (c *BaseController) GetQueryParam(context echo.Context, key string, valueType string) (interface{}, error) {
+	param := context.QueryParam(key)
+	if param == "" {
+		return nil, Error.NewRequestParsingError()
+	}
+
+	switch valueType {
+	case "int":
+		result, _ := strconv.Atoi(param)
+
+		return result, nil
+	case "uint":
+		result, _ := strconv.Atoi(param)
+
+		return uint(result), nil
+	case "string":
+		return param, nil
+	}
+
+	return nil, Error.NewRequestParsingError()
+}
+
 func (c *BaseController) GetCurrentUser(context echo.Context) (*Entity.User, error) {
 	claims, err := c.GetTokenClaims(context)
 	if err != nil {

@@ -3,7 +3,7 @@ package DSN
 import (
 	"fmt"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Database"
 )
 

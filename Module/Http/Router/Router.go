@@ -3,9 +3,9 @@ package Router
 import (
 	"net/http"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/iancoleman/strcase"
 	"github.com/labstack/echo"
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Module/Http/Middleware"
 	"github.com/umirode/go-rest/Module/Http/Response"
 	"github.com/umirode/go-rest/Validator"

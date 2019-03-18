@@ -3,8 +3,8 @@ package main
 import (
 	"sync"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/joho/godotenv"
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Module"
 	"github.com/umirode/go-rest/Module/Http"
 	"github.com/umirode/go-rest/Module/Notification"
@@ -19,14 +19,20 @@ func main() {
 		logrus.Fatal(err)
 	}
 
+	wg := &sync.WaitGroup{}
+
 	modules := getModules()
+	wg.Add(len(modules))
+
 	for _, module := range modules {
-		module.Init()
+		module.Init(wg)
 	}
 
-	wg := &sync.WaitGroup{}
-	wg.Add(1)
 	wg.Wait()
+
+	for _, module := range modules {
+		module.Close(wg)
+	}
 }
 
 func getModules() []Module.IModule {

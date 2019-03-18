@@ -1,6 +1,9 @@
 package Notification
 
 import (
+	"sync"
+
+	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Config"
 )
 
@@ -11,11 +14,15 @@ func NewModule() *Module {
 	return &Module{}
 }
 
-func (m *Module) Init() {
+func (m *Module) Init(wg *sync.WaitGroup) {
 	go func() {
 		firebaseConfig := Config.GetFirebaseConfig()
 
 		notification := NewHandler(firebaseConfig.CloudMessagingKey)
 		notification.Run()
 	}()
+}
+
+func (m *Module) Close(wg *sync.WaitGroup) {
+	logrus.Fatal("tset")
 }
