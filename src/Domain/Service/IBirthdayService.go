@@ -6,6 +6,8 @@ import (
 )
 
 type IBirthdayService interface {
+	GetAllWhichWillBeTomorrow() ([]*Entity.Birthday, error)
+	GetAllWhichWillBeToday() ([]*Entity.Birthday, error)
 	GetAllByUser(user *Entity.User) ([]*Entity.Birthday, error)
 	GetOneByIdAndUser(id uint, user *Entity.User) (*Entity.Birthday, error)
 

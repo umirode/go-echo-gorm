@@ -17,6 +17,24 @@ func NewBirthdayService(birthdayRepository Repository.IBirthdayRepository) *Birt
 	}
 }
 
+func (s *BirthdayService) GetAllWhichWillBeTomorrow() ([]*Entity.Birthday, error) {
+	birthdays, err := s.birthdayRepository.FindAllWhichWillBeTomorrow()
+	if err != nil {
+		return nil, err
+	}
+
+	return birthdays, nil
+}
+
+func (s *BirthdayService) GetAllWhichWillBeToday() ([]*Entity.Birthday, error) {
+	birthdays, err := s.birthdayRepository.FindAllWhichWillBeToday()
+	if err != nil {
+		return nil, err
+	}
+
+	return birthdays, nil
+}
+
 func (s *BirthdayService) GetOneByIdAndUser(id uint, user *Entity.User) (*Entity.Birthday, error) {
 	birthday, err := s.birthdayRepository.FindOneByIdAndUser(id, user)
 	if err != nil {

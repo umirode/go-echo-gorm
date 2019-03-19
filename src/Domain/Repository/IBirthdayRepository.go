@@ -11,4 +11,6 @@ type IBirthdayRepository interface {
 	CountByUser(user *Entity.User) (uint, error)
 	FindAllByUser(user *Entity.User) ([]*Entity.Birthday, error)
 	FindOneByIdAndUser(id uint, user *Entity.User) (*Entity.Birthday, error)
+	FindAllWhichWillBeTomorrow() ([]*Entity.Birthday, error)
+	FindAllWhichWillBeToday() ([]*Entity.Birthday, error)
 }

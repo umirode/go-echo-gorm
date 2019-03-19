@@ -8,6 +8,7 @@ import (
 
 type NotificationService struct {
 	notificationTokenRepository Repository.INotificationTokenRepository
+	birthdayRepository          Repository.IBirthdayRepository
 
 	fcmClient *fcm.FcmClient
 }

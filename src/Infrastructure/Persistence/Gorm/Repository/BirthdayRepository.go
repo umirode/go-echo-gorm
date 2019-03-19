@@ -1,6 +1,8 @@
 package Repository
 
 import (
+	"time"
+
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
 )
 
@@ -49,4 +51,24 @@ func (r *BirthdayRepository) FindOneByIdAndUser(id uint, user *Entity.User) (*En
 	}
 
 	return birthday, nil
+}
+
+func (r *BirthdayRepository) FindAllWhichWillBeTomorrow() ([]*Entity.Birthday, error) {
+	date := time.Now().AddDate(0, 0, 1)
+
+	birthdays := new([]*Entity.Birthday)
+
+	r.GetGormDB().Where("month = ? and day = ?", int(date.Month()), date.Day()).Find(birthdays)
+
+	return *birthdays, nil
+}
+
+func (r *BirthdayRepository) FindAllWhichWillBeToday() ([]*Entity.Birthday, error) {
+	date := time.Now()
+
+	birthdays := new([]*Entity.Birthday)
+
+	r.GetGormDB().Where("month = ? and day = ?", int(date.Month()), date.Day()).Find(birthdays)
+
+	return *birthdays, nil
 }
