@@ -8,7 +8,7 @@ import (
 )
 
 func TestNewGenerator(t *testing.T) {
-	assert.NotEmpty(t, NewGenerator(&Database.Config{}))
+	assert.NotNil(t, NewGenerator(&Database.Config{}))
 }
 
 func TestDsnGenerator_GetDSN(t *testing.T) {
@@ -28,6 +28,7 @@ func TestDsnGenerator_GetDSN(t *testing.T) {
 
 		dsnGenerator := NewGenerator(config)
 
+		assert.NotNil(t, dsnGenerator)
 		assert.NotEmpty(t, dsnGenerator.GetDSN())
 	}
 }

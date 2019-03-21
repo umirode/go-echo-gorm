@@ -3,6 +3,7 @@ package Service
 import (
 	"github.com/NaySoftware/go-fcm"
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
+	"github.com/umirode/go-rest/src/Domain/Model/ValueObject"
 	"github.com/umirode/go-rest/src/Domain/Repository"
 )
 
@@ -20,7 +21,7 @@ func NewNotificationService(fcmAPIKey string, notificationTokenRepository Reposi
 	}
 }
 
-func (s *NotificationService) SendToAllUsers(notification *Entity.Notification) error {
+func (s *NotificationService) SendToAllUsers(notification *ValueObject.Notification) error {
 	tokens, err := s.notificationTokenRepository.FindAll()
 	if err != nil {
 		return err
@@ -55,7 +56,7 @@ func (s *NotificationService) SendToAllUsers(notification *Entity.Notification) 
 	return nil
 }
 
-func (s *NotificationService) SendToSingleUser(notification *Entity.Notification, user *Entity.User) error {
+func (s *NotificationService) SendToSingleUser(notification *ValueObject.Notification, user *Entity.User) error {
 	tokens, err := s.notificationTokenRepository.FindAllByUser(user)
 	if err != nil {
 		return err

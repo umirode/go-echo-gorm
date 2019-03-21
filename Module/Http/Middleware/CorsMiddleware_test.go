@@ -7,14 +7,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewJWTMiddleware(t *testing.T) {
-	middleware := NewJWTMiddleware("test")
+func TestNewCorsMiddleware(t *testing.T) {
+	middleware := NewCorsMiddleware()
 
-	assert.NotEmpty(t, middleware)
+	assert.NotNil(t, middleware)
 }
 
-func TestJWTMiddleware_Middleware(t *testing.T) {
-	middleware := NewJWTMiddleware("test")
+func TestCorsMiddleware_Middleware(t *testing.T) {
+	middleware := NewCorsMiddleware()
 	middlewareFunc := middleware.Middleware(func(context echo.Context) error {
 		return nil
 	})

@@ -2,6 +2,7 @@ package Service
 
 import (
 	"github.com/umirode/go-rest/src/Domain/Model/Entity"
+	"github.com/umirode/go-rest/src/Domain/Model/ValueObject"
 	"github.com/umirode/go-rest/src/Domain/Service"
 )
 
@@ -28,7 +29,7 @@ func (s *BirthdayNotificationService) SendNotificationsAboutBirthdays() error {
 	}
 
 	for _, birthday := range todayBirthdays {
-		notification := &Entity.Notification{
+		notification := &ValueObject.Notification{
 			Title:   "Birthday today",
 			Message: "",
 		}
@@ -40,7 +41,7 @@ func (s *BirthdayNotificationService) SendNotificationsAboutBirthdays() error {
 	}
 
 	for _, birthday := range tomorrowBirthdays {
-		notification := &Entity.Notification{
+		notification := &ValueObject.Notification{
 			Title:   "Birthday tomorrow",
 			Message: "",
 		}
