@@ -5,7 +5,7 @@ import (
 	"github.com/labstack/echo"
 )
 
-type SocketIOControllerInterface interface {
+type ISocketIOController interface {
 	OnConnect(context echo.Context, s socketio.Conn) error
 	OnError(context echo.Context, e error)
 	OnDisconnect(context echo.Context, s socketio.Conn, msg string)

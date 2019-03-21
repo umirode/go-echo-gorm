@@ -15,23 +15,6 @@ func (r *UserRepositoryMock) Save(user *Entity.User) error {
 	return args.Error(0)
 }
 
-func (r *UserRepositoryMock) Delete(user *Entity.User) error {
-	args := r.Called(user)
-
-	return args.Error(0)
-}
-
-func (r *UserRepositoryMock) FindAll() ([]*Entity.User, error) {
-	args := r.Called()
-
-	users, ok := args.Get(0).([]*Entity.User)
-	if ok {
-		return users, args.Error(1)
-	}
-
-	return nil, args.Error(1)
-}
-
 func (r *UserRepositoryMock) FindOneByID(id uint) (*Entity.User, error) {
 	args := r.Called(id)
 

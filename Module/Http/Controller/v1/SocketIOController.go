@@ -9,7 +9,6 @@ import (
 
 type SocketIOController struct {
 	Controller.BaseController
-	Controller.SocketIOControllerInterface
 }
 
 func NewSocketIOController() *SocketIOController {

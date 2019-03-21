@@ -32,5 +32,5 @@ func (m *Module) Init(wg *sync.WaitGroup) {
 }
 
 func (m *Module) Close(wg *sync.WaitGroup) {
-	println("test")
+
 }

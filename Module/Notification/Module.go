@@ -3,7 +3,6 @@ package Notification
 import (
 	"sync"
 
-	"github.com/sirupsen/logrus"
 	"github.com/umirode/go-rest/Config"
 )
 
@@ -24,5 +23,5 @@ func (m *Module) Init(wg *sync.WaitGroup) {
 }
 
 func (m *Module) Close(wg *sync.WaitGroup) {
-	logrus.Fatal("tset")
+
 }
