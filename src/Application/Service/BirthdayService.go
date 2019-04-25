@@ -67,6 +67,7 @@ func (s *BirthdayService) Create(birthdayDTO *DTO.BirthdayDTO, user *Entity.User
 		Name:    birthdayDTO.Name,
 		Month:   birthdayDTO.Month,
 		Day:     birthdayDTO.Day,
+		Year:    birthdayDTO.Year,
 		OwnerID: user.ID,
 	}
 
@@ -87,6 +88,7 @@ func (s *BirthdayService) Update(birthday *Entity.Birthday, birthdayDTO *DTO.Bir
 	birthday.Name = birthdayDTO.Name
 	birthday.Day = birthdayDTO.Day
 	birthday.Month = birthdayDTO.Month
+	birthday.Year = birthdayDTO.Year
 
 	err := s.birthdayRepository.Save(birthday)
 

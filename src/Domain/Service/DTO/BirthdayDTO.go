@@ -4,4 +4,5 @@ type BirthdayDTO struct {
 	Name  string
 	Month uint
 	Day   uint
+	Year  uint
 }
